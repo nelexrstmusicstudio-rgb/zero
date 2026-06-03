@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zero Anime - Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #FFE5B4; /* Peach */
+      --background: #1A1A1A;
+      --card-bg: #2C2C2C;
+      --text: #FFFFFF;
+      --accent: #FF9F43;
+      --secondary: #3A3A3A;
+    }
+   
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+   
+    body {
+      background-color: var(--background);
+      color: var(--text);
+    }
+   
+    /* Header with Settings Button and Search Bar */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #2C2C2C;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+   
+    /* Settings Button (Three Lines) */
+    .settings-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 1002;
+    }
+   
+    .settings-button span {
+      width: 24px;
+      height: 3px;
+      background-color: #FFE5B4;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+   
+    .settings-button:hover span {
+      background-color: rgba(255, 229, 180, 0.8);
+    }
+   
+    /* Search Bar */
+    .search-bar {
+      width: 200px;
+      padding: 8px 15px;
+      border: 2px solid #FFE5B4;
+      border-radius: 20px;
+      background-color: rgba(68, 68, 68, 0.9);
+      color: #FFE5B4;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+   
+    .search-bar::placeholder {
+      color: #FFE5B4;
+      font-style: italic;
+      opacity: 0.7;
+    }
+   
+    .search-bar:focus {
+      border-color: #FFE5B4;
+      box-shadow: 0 0 10px rgba(255, 229, 180, 0.8);
+    }
+   
+    /* Sidebar */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #1C1C1C;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 1001;
+    }
+   
+    .sidebar-link {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 1.2em;
+      color: #FFE5B4;
+      display: block;
+      transition: 0.2s;
+    }
+   
+    .sidebar-link:hover {
+      background-color: #FFE5B4;
+      color: #000000;
+    }
+   
+    /* Hero Slider */
+    .hero-slider {
+      position: relative;
+      height: 70vh;
+      margin-top: 70px; /* Adjusted to account for just the settings header */
+      overflow: hidden;
+    }
+   
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      padding: 0 5%;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+   
+    .hero-slide.active {
+      opacity: 1;
+    }
+   
+    .hero-content {
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+    }
+   
+    .hero-slide h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+   
+    .hero-slide p {
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+   
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+    }
+   
+    .btn {
+      padding: 12px 25px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+    }
+   
+    .btn-primary {
+      background-color: var(--primary);
+      color: #000;
+    }
+   
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      backdrop-filter: blur(5px);
+    }
+   
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+   
+    .slider-nav {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+   
+    .slider-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+   
+    .slider-dot.active {
+      background: var(--primary);
+    }
+   
+    .slider-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s;
+    }
+   
+    .slider-arrow:hover {
+      background: var(--primary);
+      color: black;
+    }
+   
+    .slider-arrow.left {
+      left: 20px;
+    }
+   
+    .slider-arrow.right {
+      right: 20px;
+    }
+   
+    /* Main Content */
+    .container {
+      padding: 40px 5%;
+    }
+   
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+   
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+   
+    .section-title a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+   
+    /* Anime Grid */
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+   
+    .anime-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      cursor: pointer;
+    }
+   
+    .anime-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+   
+    .anime-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+   
+    .anime-info {
+      padding: 15px;
+    }
+   
+    .anime-info h3 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+   
+    .anime-info .episode {
+      color: var(--primary);
+      font-size: 0.8rem;
+    }
+   
+    .anime-info .rating {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+   
+    .anime-info .rating svg {
+      color: var(--accent);
+      margin-right: 5px;
+    }
+   
+    .latest-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--accent);
+      color: black;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+   
+    /* Latest Episodes */
+    .latest-episodes {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+   
+    .episode-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+   
+    .episode-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+   
+    .episode-img {
+      width: 120px;
+      height: 150px;
+      object-fit: cover;
+    }
+   
+    .episode-info {
+      padding: 15px;
+      flex: 1;
+    }
+   
+    .episode-info h3 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+   
+    .episode-info .anime-title {
+      color: var(--primary);
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+   
+    .episode-info .episode-number {
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+   
+    .episode-info .time {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.8rem;
+    }
+   
+    /* Categories */
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+   
+    .category {
+      background: rgba(255, 229, 180, 0.1);
+      color: var(--primary);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+   
+    .category:hover {
+      background: var(--primary);
+      color: #000;
+    }
+   
+    /* Footer */
+    footer {
+      background-color: #111;
+      padding: 30px 5%;
+      text-align: center;
+      margin-top: 50px;
+    }
+   
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+   
+    .footer-links a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+   
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+   
+    .copyright {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+   
+    .status-message {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--primary);
+      font-style: italic;
+    }
+
+    /* Vertical Sections */
+    .vertical-sections {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .vertical-section {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .vertical-section-title {
+      font-size: 1.2rem;
+      color: var(--primary);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 229, 180, 0.2);
+    }
+
+    .vertical-anime-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .vertical-anime-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .vertical-anime-item:hover {
+      background-color: rgba(255, 229, 180, 0.1);
+    }
+
+    .vertical-anime-item img {
+      width: 50px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .vertical-anime-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .vertical-anime-info h4 {
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .vertical-anime-info .episode {
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+
+    .view-all-link {
+      display: block;
+      text-align: right;
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .view-all-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Settings Header -->
+  <div class="header">
+    <!-- Settings Button -->
+    <button class="settings-button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+   
+    <!-- Search Bar -->
+    <input type="text" class="search-bar" placeholder="Search anime...">
+  </div>
+ 
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-link">Go Back to Home</a>
+  </div>
+
+  <!-- Hero Slider -->
+  <div class="hero-slider">   
+    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/599af186ad72e94caab6223b23fc22c6.jpg');">
+      <div class="hero-content">
+        <h1>SOLO LEVELING SEASON 2</h1>
+        <p>After becoming the world's weakest hunter and gaining the ability to level up, Sung Jin-Woo takes on even greater challenges in this highly anticipated series.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" onclick="watchAnime('Solo Leveling season 2')">Watch Now</button>
+          <button class="btn btn-secondary">+ My List</button>
+        </div>
+      </div>
+    </div>
+   
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/58d0b99666b285d2c484fec5dfaa23f0.jpg');">
+      <div class="hero-content">
+        <h1>Bleach</h1>
+        <p>Ichigo Kurosaki is an ordinary high schooler—until his family is attacked by a Hollow.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" onclick="watchAnime('Jujutsu Kaisen')">Watch Now</button>
+          <button class="btn btn-secondary">+ My List</button>
+        </div>
+      </div>
+    </div>
+   
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/e5dee087051734a86d59c748b6bf201a.jpg');">
+      <div class="hero-content">
+        <h1>Fire Force Season 3</h1>
+        <p>Shinra Kusakabe joins Special Fire Force Company 8 to uncover the truth behind a mysterious phenomenon that turns people into living infernos.</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary" onclick="watchAnime('Dandadan')">Watch Now</button>
+          <button class="btn btn-secondary">+ My List</button>
+        </div>
+      </div>
+    </div>
+   
+    <button class="slider-arrow left" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+    <button class="slider-arrow right" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+   
+    <div class="slider-nav">
+      <div class="slider-dot active" onclick="goToSlide(0)"></div>
+      <div class="slider-dot" onclick="goToSlide(1)"></div>
+      <div class="slider-dot" onclick="goToSlide(2)"></div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="status-message">- - if the anime episodes are missing it's being worked on or report to our discord for updates - -</div>
+   
+    <!-- Latest Episodes -->
+    <div class="section">
+      <div class="section-title">
+        <h2>Latest Episodes</h2>
+        <a href="#">View All</a>
+      </div>
+      <div class="latest-episodes">
+        <div class="episode-card" onclick="watchAnime('Solo Leveling season 2')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg" alt="Solo Leveling season 2" class="episode-img">
+          <div class="episode-info">
+            <div class="anime-title">Solo Leveling season 2</div>
+            <div class="episode-number">Episode 12</div>
+            <div class="time">Released 2 hours ago</div>
+          </div>
+        </div>
+       
+        <div class="episode-card" onclick="watchAnime('Jujutsu Kaisen')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/82402f796b7d84d7071ab1e03ff7747a.jpg" alt="Jujutsu Kaisen" class="episode-img">
+          <div class="episode-info">
+            <div class="anime-title">Jujutsu Kaisen</div>
+            <div class="episode-number">Episode 24</div>
+            <div class="time">Released 1 day ago</div>
+          </div>
+        </div>
+       
+        <div class="episode-card" onclick="watchAnime('Am I Actually the Strongest?')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f5143ba1266a0f80f5ea770e92721b47.png" alt="Am I Actually the Strongest?" class="episode-img">
+          <div class="episode-info">
+            <div class="anime-title">Am I Actually the Strongest?</div>
+            <div class="episode-number">Episode 12</div>
+            <div class="time">Released today</div>
+          </div>
+        </div>
+       
+        <div class="episode-card" onclick="watchAnime('Please Put Them On, Takamine-san')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/427526598ffeb6a0521ed6ca8c78b549.jpg" alt="Please Put Them On, Takamine-san" class="episode-img">
+          <div class="episode-info">
+            <div class="anime-title">Please Put Them On, Takamine-san</div>
+            <div class="episode-number">Episode 1</div>
+            <div class="time">Released 1 day ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vertical Sections (Top Airing, Most Popular, Most Favorite, Latest Completed) -->
+    <div class="vertical-sections">
+      <!-- Top Airing -->
+      <div class="vertical-section">
+        <h3 class="vertical-section-title">Top Airing</h3>
+        <div class="vertical-anime-list">
+          <div class="vertical-anime-item" onclick="watchAnime('Solo Leveling season 2')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg" alt="Solo Leveling season 2">
+            <div class="vertical-anime-info">
+              <h4>Solo Leveling season 2</h4>
+              <div class="episode">EP 12</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Jujutsu Kaisen')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/82402f796b7d84d7071ab1e03ff7747a.jpg" alt="Jujutsu Kaisen">
+            <div class="vertical-anime-info">
+              <h4>Jujutsu Kaisen</h4>
+              <div class="episode">EP 24</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Dandadan')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/a8b56a7589ff9edb6c86977c31e27a06.jpg" alt="Dandadan">
+            <div class="vertical-anime-info">
+              <h4>Dandadan</h4>
+              <div class="episode">EP 8</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('The Apothecary Diaries')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/c7346b9cd930d501d2b6b40770b2b1d0.jpg" alt="The Apothecary Diaries">
+            <div class="vertical-anime-info">
+              <h4>The Apothecary Diaries</h4>
+              <div class="episode">EP 10</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('One Piece')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bcd84731a3eda4f4a306250769675065.jpg" alt="One Piece">
+            <div class="vertical-anime-info">
+              <h4>One Piece</h4>
+              <div class="episode">EP 1092</div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="view-all-link">View All</a>
+      </div>
+
+      <!-- Most Popular -->
+      <div class="vertical-section">
+        <h3 class="vertical-section-title">Most Popular</h3>
+        <div class="vertical-anime-list">
+          <div class="vertical-anime-item" onclick="watchAnime('Naruto: Shippuden')">
+            <img src="https://img.bunnyccdn.co/_r/300x400/100/9c/bc/9cbcf87f54194742e7686119089478f8/9cbcf87f54194742e7686119089478f8.jpg" alt="Naruto: Shippuden">
+            <div class="vertical-anime-info">
+              <h4>Naruto: Shippuden</h4>
+              <div class="episode">EP 500</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Bleach')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bd5ae1d387a59c5abcf5e1a6a616728c.jpg" alt="Bleach">
+            <div class="vertical-anime-info">
+              <h4>Bleach</h4>
+              <div class="episode">EP 366</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Vinland Saga')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9cc864ccccce7f38f7a100627ef21516.jpg" alt="Vinland Saga">
+            <div class="vertical-anime-info">
+              <h4>Vinland Saga</h4>
+              <div class="episode">EP 48</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('That Time I Got Reincarnated as a Slime Season 3')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f9b501458823539b6a2004f2cdb98a4a.jpg" alt="Reincarnated as Slime">
+            <div class="vertical-anime-info">
+              <h4>Reincarnated as Slime S3</h4>
+              <div class="episode">EP 12</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('The Beginning After the End')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9bc9db5df112e89f9bb5020db9dbd1f8.jpg" alt="The Beginning After the End">
+            <div class="vertical-anime-info">
+              <h4>The Beginning After the End</h4>
+              <div class="episode">EP 24</div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="view-all-link">View All</a>
+      </div>
+
+      <!-- Most Favorite -->
+      <div class="vertical-section">
+        <h3 class="vertical-section-title">Most Favorite</h3>
+        <div class="vertical-anime-list">
+          <div class="vertical-anime-item" onclick="watchAnime('Solo Leveling Season 1')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/b147d331e311a5d5c8ee81269725fc92.png" alt="Solo Leveling Season 1">
+            <div class="vertical-anime-info">
+              <h4>Solo Leveling S1</h4>
+              <div class="episode">EP 12</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('The Apothecary Diaries Season 2')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/c7346b9cd930d501d2b6b40770b2b1d0.jpg" alt="The Apothecary Diaries">
+            <div class="vertical-anime-info">
+              <h4>Apothecary Diaries S2</h4>
+              <div class="episode">EP 10</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Seirei Gensouki: Spirit Chronicles Season 2')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/abc91d454286d59336fd5feb60f84537.jpg" alt="Seirei Gensouki: Spirit Chronicles">
+            <div class="vertical-anime-info">
+              <h4>Spirit Chronicles S2</h4>
+              <div class="episode">EP 12</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('The 100 Girlfriends Who Really, Really Love You Season 2')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/e91ce663a30bda517c5a191c575a16c0.jpg" alt="The 100 Girlfriends">
+            <div class="vertical-anime-info">
+              <h4>100 Girlfriends S2</h4>
+              <div class="episode">EP 12</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Am I Actually the Strongest?')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f5143ba1266a0f80f5ea770e92721b47.png" alt="Am I Actually the Strongest?">
+            <div class="vertical-anime-info">
+              <h4>Am I Actually the Strongest?</h4>
+              <div class="episode">EP 12</div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="view-all-link">View All</a>
+      </div>
+
+      <!-- Latest Completed -->
+      <div class="vertical-section">
+        <h3 class="vertical-section-title">Latest Completed</h3>
+        <div class="vertical-anime-list">
+          <div class="vertical-anime-item" onclick="watchAnime('Fire Force Season 2')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/e5dee087051734a86d59c748b6bf201a.jpg" alt="Fire Force">
+            <div class="vertical-anime-info">
+              <h4>Fire Force S2</h4>
+              <div class="episode">Completed</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Seirei Gensouki: Spirit Chronicles Season 1')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/d31ffa021edfe73060863960be6e34b8.jpg" alt="Seirei Gensouki: Spirit Chronicles">
+            <div class="vertical-anime-info">
+              <h4>Spirit Chronicles S1</h4>
+              <div class="episode">Completed</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('I Got a Cheat Skill in Another World')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/0ad5356f28ee75bccfde8b69ea6a5e54.jpg" alt="Cheat Skill Anime">
+            <div class="vertical-anime-info">
+              <h4>Cheat Skill Anime</h4>
+              <div class="episode">Completed</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Kakushite! Makina-san!!')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/62380f0676cc6f49ad718dc2fa8b8820.jpg" alt="Kakushite! Makina-san!!">
+            <div class="vertical-anime-info">
+              <h4>Kakushite! Makina-san!!</h4>
+              <div class="episode">Completed</div>
+            </div>
+          </div>
+          <div class="vertical-anime-item" onclick="watchAnime('Miss caretaker of Sunohara-sou')">
+            <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/fe1ad220ce9e7951b2a2e9107aca3e82.jpg" alt="Miss caretaker of Sunohara-sou">
+            <div class="vertical-anime-info">
+              <h4>Sunohara-sou</h4>
+              <div class="episode">Completed</div>
+            </div>
+          </div>
+        </div>
+        <a href="#" class="view-all-link">View All</a>
+      </div>
+    </div>
+
+    <!-- New Additions -->
+    <div class="section">
+      <div class="section-title">
+        <h2>New Additions</h2>
+        <a href="#">View All</a>
+      </div>
+     
+      <div class="anime-grid">
+        <div class="anime-card" onclick="watchAnime('Kakushite! Makina-san!!')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/62380f0676cc6f49ad718dc2fa8b8820.jpg" alt="Kakushite! Makina-san!!">
+          <div class="anime-info">
+            <h3>Kakushite! Makina-san!!</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.1
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Yandere Dark Elf: She Chased Me All the Way From Another World!')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/3aca0826a0b696c73bddb24bcb4aa2b4.jpg" alt="Yandere Dark Elf">
+          <div class="anime-info">
+            <h3>Yandere Dark Elf: She Chased Me All the Way From Another World!</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              7.9
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('The Unaware Atelier Master')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/2d88c86cde3109d90f21da5a6bb65a8c.jpg" alt="The Unaware Atelier Master">
+          <div class="anime-info">
+            <h3>The Unaware Atelier Master</h3>
+            <div class="episode"></div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.3
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Solo Leveling Season 2')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg" alt="Solo Leveling Season 2">
+          <div class="anime-info">
+            <h3>Solo Leveling Season 2</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.8
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Please Put Them On, Takamine-san')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/427526598ffeb6a0521ed6ca8c78b549.jpg" alt="Please Put Them On, Takamine-san">
+          <div class="anime-info">
+            <h3>Please Put Them On, Takamine-san</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.4
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Beheneko: The Elf-Girl\'s Cat is Secretly an S-Ranked Monster!')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/aa2cb028fd55a639ceccab8c94fbd4b4.jpg" alt="Beheneko">
+          <div class="anime-info">
+            <h3>Beheneko: The Elf-Girl's Cat is Secretly an S-Ranked Monster!</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.7
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Dandadan')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/a8b56a7589ff9edb6c86977c31e27a06.jpg" alt="Dandadan">
+          <div class="anime-info">
+            <h3>Dandadan</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.3
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('One Piece')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bcd84731a3eda4f4a306250769675065.jpg" alt="One Piece">
+          <div class="anime-info">
+            <h3>One Piece</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.2
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('The 100 Girlfriends Who Really, Really Love You Season 2')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/e91ce663a30bda517c5a191c575a16c0.jpg" alt="The 100 Girlfriends">
+          <div class="anime-info">
+            <h3>The 100 Girlfriends Who Really, Really Love You Season 2</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.8
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Possibly the Greatest Alchemist of All Time')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/04e3c56bf2b52e90e0016b803967600e.jpg" alt="Possibly the Greatest Alchemist of All Time">
+          <div class="anime-info">
+            <h3>Possibly the Greatest Alchemist of All Time</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.5
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Seirei Gensouki: Spirit Chronicles Season 1')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/d31ffa021edfe73060863960be6e34b8.jpg" alt="Seirei Gensouki: Spirit Chronicles">
+          <div class="anime-info">
+            <h3>Seirei Gensouki: Spirit Chronicles Season 1</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.0
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Seirei Gensouki: Spirit Chronicles Season 2')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/abc91d454286d59336fd5feb60f84537.jpg" alt="Seirei Gensouki: Spirit Chronicles">
+          <div class="anime-info">
+            <h3>Seirei Gensouki: Spirit Chronicles Season 2</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.1
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Naruto: Shippuden')">
+          <img src="https://img.bunnyccdn.co/_r/300x400/100/9c/bc/9cbcf87f54194742e7686119089478f8/9cbcf87f54194742e7686119089478f8.jpg" alt="Naruto: Shippuden">
+          <div class="anime-info">
+            <h3>Naruto: Shippuden</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.2
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Vinland Saga')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9cc864ccccce7f38f7a100627ef21516.jpg" alt="Vinland Saga">
+          <div class="anime-info">
+            <h3>Vinland Saga</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.4
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Miss caretaker of Sunohara-sou')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/fe1ad220ce9e7951b2a2e9107aca3e82.jpg" alt="Miss caretaker of Sunohara-sou">
+          <div class="anime-info">
+            <h3>Miss caretaker of Sunohara-sou</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.2
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Solo Leveling Season 1')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/b147d331e311a5d5c8ee81269725fc92.png" alt="Solo Leveling Season 1">
+          <div class="anime-info">
+            <h3>Solo Leveling Season 1</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.7
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('The Apothecary Diaries Season 2')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/c7346b9cd930d501d2b6b40770b2b1d0.jpg" alt="The Apothecary Diaries">
+          <div class="anime-info">
+            <h3>The Apothecary Diaries Season 2</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.3
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('I May Be a Guild Receptionist, but I\'ll Solo Any Boss to Clock Out on Time')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/ac8389e16478cd7283b8769c7ec9b484.jpg" alt="Guild Receptionist">
+          <div class="anime-info">
+            <h3>I May Be a Guild Receptionist, but I'll Solo Any Boss to Clock Out on Time</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.9
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Am I Actually the Strongest?')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f5143ba1266a0f80f5ea770e92721b47.png" alt="Am I Actually the Strongest?">
+          <div class="anime-info">
+            <h3>Am I Actually the Strongest?</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.1
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Even Given the Worthless \"Appraiser\" Class, I\'m Actually the Strongest')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/aa538daa52052ce7a288a55e60988896.jpg" alt="Appraiser Class">
+          <div class="anime-info">
+            <h3>Even Given the Worthless "Appraiser" Class, I'm Actually the Strongest</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.7
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('Bleach')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bd5ae1d387a59c5abcf5e1a6a616728c.jpg" alt="Bleach">
+          <div class="anime-info">
+            <h3>Bleach</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.0
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('That Time I Got Reincarnated as a Slime Season 3')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f9b501458823539b6a2004f2cdb98a4a.jpg" alt="Reincarnated as Slime">
+          <div class="anime-info">
+            <h3>That Time I Got Reincarnated as a Slime Season 3</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.2
+            </div>
+          </div>
+        </div>
+       
+        <div class="anime-card" onclick="watchAnime('I Got a Cheat Skill in Another World and Became Unrivaled in The Real World, Too')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/0ad5356f28ee75bccfde8b69ea6a5e54.jpg" alt="Cheat Skill Anime">
+          <div class="anime-info">
+            <h3>I Got a Cheat Skill in Another World and Became Unrivaled in The Real World, Too</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.6
+            </div>
+          </div>
+        </div>
+        <div class="anime-card" onclick="watchAnime('The Beginning After the End')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9bc9db5df112e89f9bb5020db9dbd1f8.jpg" alt="The Beginning After the End">
+          <div class="anime-info">
+            <h3>The Beginning After the End</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              9.2
+            </div>
+          </div>
+        </div>
+        <div class="anime-card" onclick="watchAnime('Im the Evil Lord of an Intergalactic Empire!')">
+          <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/204f14c82271f1120b1237df0eb86c25.jpg" alt="I'm the Evil Lord of an Intergalactic Empire!">
+          <div class="anime-info">
+            <h3>I'm the Evil Lord of an Intergalactic Empire!</h3>
+            <div class="episode">New</div>
+            <div class="rating">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              8.9
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="section">
+      <div class="section-title">
+        <h2>Browse Categories</h2>
+      </div>
+      <div class="categories">
+        <div class="category">Action</div>
+        <div class="category">Adventure</div>
+        <div class="category">Comedy</div>
+        <div class="category">Drama</div>
+        <div class="category">Fantasy</div>
+        <div class="category">Horror</div>
+        <div class="category">Mystery</div>
+        <div class="category">Romance</div>
+        <div class="category">Sci-Fi</div>
+        <div class="category">Slice of Life</div>
+        <div class="category">Sports</div>
+        <div class="category">Supernatural</div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">FAQ</a>
+      <a href="#">Contact</a>
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+    </div>
+    <p class="copyright">© 2023 Zero Anime. All rights reserved.</p>
+  </footer>
+  <script>
+    // Function to open the sidebar
+    function openSidebar() {
+      document.getElementById('sidebar').style.width = '250px';
+    }
+   
+    // Function to close the sidebar
+    function closeSidebar() {
+      document.getElementById('sidebar').style.width = '0';
+    }
+   
+    // Add event listener to the settings button
+    document.querySelector('.settings-button').addEventListener('click', openSidebar);
+   
+    // Close the sidebar when clicking outside of it
+    document.addEventListener('click', (event) => {
+      const sidebar = document.getElementById('sidebar');
+      const settingsButton = document.querySelector('.settings-button');
+      if (!sidebar.contains(event.target) && !settingsButton.contains(event.target)) {
+        closeSidebar();
+      }
+    });
+   
+    // Slider functionality
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+   
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+     
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+   
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+   
+    function prevSlide() {
+      showSlide(currentSlide - 1);
+    }
+   
+    function goToSlide(n) {
+      showSlide(n);
+    }
+   
+    // Auto slide change every 5 seconds
+    setInterval(nextSlide, 5000);
+   
+    // Watch anime function
+    function watchAnime(title) {
+      window.location.href = `watch.html?anime=${encodeURIComponent(title)}`;
+    }
+  </script>
+</body>
+</html>
