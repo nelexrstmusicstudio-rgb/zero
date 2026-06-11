@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch Anime - Zero Anime</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #2C2C2C;
+      color: #FFE5B4;
+    }
+    
+    .container {
+      display: flex;
+      max-width: 1400px;
+      width: 100%;
+      margin-top: 100px;
+      gap: 0;
+      box-shadow: 0 0 20px rgba(255, 229, 180, 0.3);
+      border-radius: 15px;
+    }
+    
+    /* Header with Settings Button and Search Bar */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #2C2C2C;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    
+    /* Settings Button (Three Lines) */
+    .settings-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 1002;
+    }
+    
+    .settings-button span {
+      width: 24px;
+      height: 3px;
+      background-color: #FFE5B4;
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    
+    .settings-button:hover span {
+      background-color: rgba(255, 229, 180, 0.8);
+    }
+    
+    /* Search Bar */
+    .search-bar {
+      width: 200px;
+      padding: 8px 15px;
+      border: 2px solid #FFE5B4;
+      border-radius: 20px;
+      background-color: rgba(68, 68, 68, 0.9);
+      color: #FFE5B4;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .search-bar::placeholder {
+      color: #FFE5B4;
+      font-style: italic;
+      opacity: 0.7;
+    }
+    
+    .search-bar:focus {
+      border-color: #FFE5B4;
+      box-shadow: 0 0 10px rgba(255, 229, 180, 0.8);
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #1C1C1C;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 60px;
+      z-index: 1001;
+    }
+    
+    .sidebar-link {
+      padding: 10px 15px;
+      text-decoration: none;
+      font-size: 1.2em;
+      color: #FFE5B4;
+      display: block;
+      transition: 0.2s;
+    }
+    
+    .sidebar-link:hover {
+      background-color: #FFE5B4;
+      color: #000000;
+    }
+    
+    /* Episode List */
+    .episode-list {
+      width: 300px;
+      background-color: rgba(44, 44, 44, 0.9);
+      border-radius: 15px 0 0 15px;
+      padding: 20px;
+      height: 80vh;
+      overflow-y: auto;
+      border-right: 1px solid #FFE5B4;
+    }
+    
+    .episode-list h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #FFE5B4;
+      text-align: center;
+    }
+    
+    .episode-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .episode-list li {
+      margin-bottom: 15px;
+    }
+    
+    .episode-list a {
+      display: block;
+      padding: 12px;
+      background-color: rgba(68, 68, 68, 0.9);
+      color: #FFE5B4;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+      font-size: 1.1em;
+    }
+    
+    .episode-list a:hover {
+      background-color: #FFE5B4;
+      color: #000000;
+    }
+    
+    .episode-list a.watched {
+      background-color: rgba(255, 229, 180, 0.5);
+    }
+    
+    /* Video Player */
+    .video-player {
+      flex: 1;
+      background-color: rgba(44, 44, 44, 0.9);
+      border-radius: 0 15px 15px 0;
+      padding: 20px;
+    }
+    
+    .video-player h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #FFE5B4;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 70vh;
+      border-radius: 10px;
+      border: none;
+    }
+    
+    /* Season Section */
+    .season-section {
+      background-color: rgba(44, 44, 44, 0.9);
+      border-radius: 10px;
+      padding: 10px;
+      width: 95%;
+      margin-top: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .season-info h2 {
+      font-size: 1.4em;
+      color: #FFE5B4;
+      margin-bottom: 8px;
+    }
+    
+    .season-info p {
+      font-size: 0.9em;
+      color: #FFE5B4;
+      margin-bottom: 8px;
+    }
+    
+    .server-options h3 {
+      font-size: 1em;
+      color: #FFE5B4;
+      margin-bottom: 8px;
+    }
+    
+    .countdown h3 {
+      font-size: 1em;
+      color: #FFE5B4;
+      margin-bottom: 8px;
+    }
+    
+    .seasons h3 {
+      font-size: 1em;
+      color: #FFE5B4;
+      margin-bottom: 8px;
+    }
+    
+    .server-options button {
+      padding: 6px 12px;
+      font-size: 0.9em;
+      border-radius: 15px;
+      background-color: rgba(68, 68, 68, 0.9);
+      color: #FFE5B4;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+    
+    .server-options button:hover {
+      background-color: #FFE5B4;
+      color: #000000;
+    }
+    
+    .season-list {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .season {
+      background-color: rgba(68, 68, 68, 0.9);
+      border-radius: 8px;
+      padding: 10px;
+      min-width: 100px;
+      text-align: center;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .season:hover {
+      box-shadow: 0 0 15px #FFE5B4;
+      transform: scale(1.05);
+    }
+    
+    .season h4 {
+      font-size: 1em;
+      color: #FFE5B4;
+      margin-bottom: 5px;
+    }
+    
+    .season p {
+      font-size: 0.9em;
+      color: #FFE5B4;
+    }
+    
+    .season:hover p {
+      display: none;
+    }
+    
+    .season.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    
+    /* Comment Section */
+    .comment-section {
+      background-color: rgba(44, 44, 44, 0.9);
+      border-radius: 10px;
+      padding: 20px;
+      width: 95%;
+      margin: 20px auto;
+      color: #FFE5B4;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .comment-section h2 {
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 229, 180, 0.3);
+      padding-bottom: 10px;
+    }
+    
+    .comment-form {
+      margin-bottom: 20px;
+    }
+    
+    #comments-container {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    
+    .comment {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 229, 180, 0.2);
+      margin-bottom: 15px;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      background-color: #FFE5B4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2C2C2C;
+      font-weight: bold;
+      font-size: 1.2em;
+      flex-shrink: 0;
+    }
+    
+    .comment-content {
+      flex: 1;
+    }
+    
+    .comment-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .comment-user {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .comment-user::before {
+      content: "U";
+      font-weight: bold;
+      margin-right: 5px;
+      color: #FFE5B4;
+    }
+    
+    .comment-time {
+      font-size: 0.8em;
+      color: rgba(255, 229, 180, 0.7);
+    }
+    
+    .comment-text {
+      line-height: 1.5;
+    }
+    
+    #comment-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 5px;
+      border: 1px solid #FFE5B4;
+      background-color: rgba(68, 68, 68, 0.9);
+      color: #FFE5B4;
+      margin-bottom: 10px;
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .comment-btn {
+      padding: 8px 15px;
+      background-color: #FFE5B4;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    .comment-btn:hover {
+      background-color: rgba(255, 229, 180, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <a href="index.html" class="sidebar-link">Home</a>
+  </div>
+
+  <!-- Header with Settings Button and Search Bar -->
+  <div class="header">
+    <!-- Settings Button -->
+    <button class="settings-button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    
+    <!-- Search Bar -->
+    <input type="text" class="search-bar" placeholder="Search anime...">
+  </div>
+
+  <div class="container">
+    <!-- Episode List -->
+    <div class="episode-list">
+      <h2>Episodes</h2>
+      <ul id="episode-list">
+        <!-- Episodes will be dynamically added here -->
+      </ul>
+    </div>
+    
+    <!-- Video Player -->
+    <div class="video-player">
+      <h2 id="anime-title">Now Playing: Episode 1</h2>
+      <iframe id="video-player" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- Season Section -->
+  <div class="season-section">
+    <div class="season-info">
+      <h2>You are watching Episode 1</h2>
+      <p>If the current server is not working, please try switching to other servers.</p>
+      <p>The next episode is expected to be released on <span id="release-time">2025/25/25 8:30:00 AM</span></p>
+    </div>
+    
+    <div class="server-options">
+      <h3>Servers</h3>
+      <button onclick="changeServer('sub')">Hard Sub</button>
+      <button onclick="changeServer('sub')">Soft Sub</button>
+      <button onclick="changeServer('dub')">Dub</button>
+    </div>
+    
+    <div class="countdown">
+      <h3>Countdown</h3>
+      <p id="countdown-timer">1 day, 15 hours, 8 minutes, 25 seconds</p>
+    </div>
+    
+    <div class="seasons">
+      <h3>Seasons</h3>
+      <div class="season-list" id="season-list">
+        <!-- Seasons will be dynamically added here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Comment Section -->
+  <div class="comment-section">
+    <h2>Comments</h2>
+    
+    <div class="comment-form">
+      <textarea id="comment-input" placeholder="Add a comment..."></textarea>
+      <button class="comment-btn" onclick="postComment()">Post Comment</button>
+    </div>
+    
+    <div id="comments-container">
+      <!-- Comments will be loaded here -->
+    </div>
+  </div>
+
+  <script>
+    // Function to open the sidebar
+    function openSidebar() {
+      document.getElementById('sidebar').style.width = '250px';
+    }
+    
+    // Function to close the sidebar
+    function closeSidebar() {
+      document.getElementById('sidebar').style.width = '0';
+    }
+    
+    // Add event listener to the settings button
+    document.querySelector('.settings-button').addEventListener('click', openSidebar);
+    
+    // Close the sidebar when clicking outside of it
+    document.addEventListener('click', (event) => {
+      const sidebar = document.getElementById('sidebar');
+      const settingsButton = document.querySelector('.settings-button');
+      if (!sidebar.contains(event.target) && !settingsButton.contains(event.target)) {
+        closeSidebar();
+      }
+    });
+    
+    // Set the release date and time
+    const releaseDate = new Date('2025-03-30T09:30:00').getTime();
+    
+    // Update the countdown every second
+    const countdownTimer = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = releaseDate - now;
+      
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+      
+      document.getElementById('countdown-timer').textContent = `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+      
+      if (timeLeft < 0) {
+        clearInterval(countdownTimer);
+        document.getElementById('countdown-timer').textContent = 'Episode is now available!';
+      }
+    }, 1000);
+    
+    // Get the anime title from the URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    let animeTitle = decodeURIComponent(urlParams.get('anime'));
+    console.log('Anime Title:', animeTitle);
+    
+    // Define episode data for each anime (keeping your existing data)
+    const animeEpisodes = {
+      'Solo Leveling season 2': [
+        { title: 'Episode 1', file: 'https://mega.nz/embed/i84zjJpL#zgG9LMvaKk7zUewcXn-7-C1gbMeSqC9pwcE-z6sMvvg' },
+        { title: 'Episode 2', file: 'https://mega.nz/embed/DwJExQxB#tgqGvMkPzYmDnHcukv7Yt4cFS2LviYI9lOTtJ2qeTTI' },
+        { title: 'Episode 3', file: 'https://mega.nz/embed/6pAxxCIA#hw0cqvJhecIOW0eiZsk7-8WgFJIgF_8wtjCc4PuupyU' },
+        { title: 'Episode 4', file: 'https://mega.nz/embed/ehpi0DCL#Lj7-8WwsnVsXf-5mehzHZUOLc1k7_7I6-bCQRfKLbkM' },
+        { title: 'Episode 5', file: 'https://mega.nz/embed/m9AV0JrD#oah9JLf8Y0XdWCve7PbNNNr-oVp7lo11AfMTTkCwU8c' },
+        { title: 'Episode 6', file: 'https://mega.nz/embed/WsBVXSqJ#gG7l4GEaFTr2NafunxvXhsAQQm1msqn-UEpFpb8ggv8' },
+        { title: 'Episode 7', file: 'https://mega.nz/embed/ClYzhLwJ#rqM8yf5JEcigaG6V9Po4X2ecj1RneHHDA79emLkQMyY' },
+        { title: 'Episode 8', file: 'https://mega.nz/embed/O1gDHbjI#HYuKNfeaAJViJONPngofAibGDmb_jXbnUoEFEIrjRNk' },
+        { title: 'Episode 9', file: ''},
+        { title: 'Episode 10', file:'https://mega.nz/embed/zoBhzCBI#hEYyTN3VpB7dgrA3Ay9q0iH1TCjZU11oQ9qkTmvO2LU' },
+        { title: 'Episode 11', file:'https://mega.nz/embed/Sk4R1TiC#4CTVDF2vmZUI4PVYdmatItvEs4Ic9cBBBm-Cpn98YHc' },
+        { title: 'Episode 12', file:'https://mega.nz/embed/C9wEkaJL#DG_pHIWTLFZkMDTAJUJYP2iCfEwTdeyh2YxHFvZpedU'},
+        { title: 'Episode 13', file:'https://mega.nz/embed/KwYRRayb#ShMS-ZUevm5_bRRS4ClLLvwZA2LIGom0L5_lRIMZYnA'},
+      ],
+      'Jujutsu Kaisen': [
+        { title: 'Episode 1', file: 'https://example.com/jujutsu-kaisen-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/jujutsu-kaisen-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/jujutsu-kaisen-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/jujutsu-kaisen-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/jujutsu-kaisen-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/jujutsu-kaisen-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/jujutsu-kaisen-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/jujutsu-kaisen-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/jujutsu-kaisen-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/jujutsu-kaisen-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/jujutsu-kaisen-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/jujutsu-kaisen-ep12' },
+        { title: 'Episode 13', file: 'https://example.com/jujutsu-kaisen-ep13' },
+        { title: 'Episode 14', file: 'https://example.com/jujutsu-kaisen-ep14' },
+        { title: 'Episode 15', file: 'https://example.com/jujutsu-kaisen-ep15' },
+        { title: 'Episode 16', file: 'https://example.com/jujutsu-kaisen-ep16' },
+        { title: 'Episode 17', file: 'https://example.com/jujutsu-kaisen-ep17' },
+        { title: 'Episode 18', file: 'https://example.com/jujutsu-kaisen-ep18' },
+        { title: 'Episode 19', file: 'https://example.com/jujutsu-kaisen-ep19' },
+        { title: 'Episode 20', file: 'https://example.com/jujutsu-kaisen-ep20' },
+        { title: 'Episode 21', file: 'https://example.com/jujutsu-kaisen-ep21' },
+        { title: 'Episode 22', file: 'https://example.com/jujutsu-kaisen-ep22' },
+        { title: 'Episode 23', file: 'https://example.com/jujutsu-kaisen-ep23' },
+        { title: 'Episode 24', file: 'https://example.com/jujutsu-kaisen-ep24' }
+      ],
+      'Dandadan': [
+        { title: 'Episode 1', file: 'https://example.com/dandadan-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/dandadan-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/dandadan-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/dandadan-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/dandadan-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/dandadan-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/dandadan-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/dandadan-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/dandadan-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/dandadan-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/dandadan-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/dandadan-ep12' }
+      ],
+      'The Apothecary Diaries': [
+        { title: 'Episode 1', file: 'https://example.com/apothecary-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/apothecary-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/apothecary-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/apothecary-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/apothecary-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/apothecary-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/apothecary-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/apothecary-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/apothecary-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/apothecary-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/apothecary-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/apothecary-ep12' }
+      ],
+      'One Piece': [
+        { title: 'Episode 1', file: 'https://example.com/one-piece-ep1' },
+        { title: 'Episode 2', file: 'https://example.com/one-piece-ep2' },
+        { title: 'Episode 3', file: 'https://example.com/one-piece-ep3' },
+        { title: 'Episode 4', file: 'https://example.com/one-piece-ep4' },
+        { title: 'Episode 5', file: 'https://example.com/one-piece-ep5' },
+        { title: 'Episode 6', file: 'https://example.com/one-piece-ep6' },
+        { title: 'Episode 7', file: 'https://example.com/one-piece-ep7' },
+        { title: 'Episode 8', file: 'https://example.com/one-piece-ep8' },
+        { title: 'Episode 9', file: 'https://example.com/one-piece-ep9' },
+        { title: 'Episode 10', file: 'https://example.com/one-piece-ep10' },
+        { title: 'Episode 11', file: 'https://example.com/one-piece-ep11' },
+        { title: 'Episode 12', file: 'https://example.com/one-piece-ep12' },
+        { title: 'Episode 13', file: 'https://example.com/one-piece-ep13' },
+        { title: 'Episode 14', file: 'https://example.com/one-piece-ep14' },
+        { title: 'Episode 15', file: 'https://example.com/one-piece-ep15' },
+        { title: 'Episode 16', file: 'https://example.com/one-piece-ep16' },
+        { title: 'Episode 17', file: 'https://example.com/one-piece-ep17' },
+        { title: 'Episode 18', file: 'https://example.com/one-piece-ep18' },
+        { title: 'Episode 19', file: 'https://example.com/one-piece-ep19' },
+        { title: 'Episode 20', file: 'https://example.com/one-piece-ep20' },
+        { title: 'Episode 21', file: 'https://example.com/one-piece-ep21' },
+        { title: 'Episode 22', file: 'https://example.com/one-piece-ep22' },
+        { title: 'Episode 23', file: 'https://example.com/one-piece-ep23' },
+        { title: 'Episode 24', file: 'https://example.com/one-piece-ep24' }
+      ]
+    };
+
+    function getAvatarColor(letter) {
+      const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F06292'];
+      const charCode = letter.charCodeAt(0);
+      return colors[charCode % colors.length];
+    }
+
+    function loadEpisode(videoFile, episodeTitle) {
+      const videoPlayer = document.getElementById('video-player');
+      videoPlayer.src = videoFile;
+      document.getElementById('anime-title').textContent = `Now Playing: ${episodeTitle}`;
+      markEpisodeAsWatched(episodeTitle);
+    }
+    
+    function markEpisodeAsWatched(episodeTitle) {
+      const watchedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes') || '[]');
+      if (!watchedEpisodes.includes(episodeTitle)) {
+        watchedEpisodes.push(episodeTitle);
+        localStorage.setItem('watchedEpisodes', JSON.stringify(watchedEpisodes));
+      }
+      updateEpisodeList();
+    }
+    
+    function updateEpisodeList() {
+      const watchedEpisodes = JSON.parse(localStorage.getItem('watchedEpisodes') || '[]');
+      const episodeLinks = document.querySelectorAll('.episode-list a');
+      episodeLinks.forEach(link => {
+        if (watchedEpisodes.includes(link.textContent)) {
+          link.classList.add('watched');
+        }
+      });
+    }
+    
+    function populateEpisodeList(episodes) {
+      const episodeList = document.getElementById('episode-list');
+      episodeList.innerHTML = '';
+      
+      episodes.forEach((episode, index) => {
+        const listItem = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = '#';
+        link.textContent = episode.title;
+        link.onclick = () => loadEpisode(episode.file, episode.title);
+        listItem.appendChild(link);
+        episodeList.appendChild(listItem);
+      });
+      
+      updateEpisodeList();
+    }
+    
+    function changeServer(server) {
+      alert(`Switched to ${server.toUpperCase()} server`);
+    }
+
+    function getBaseAnimeName(fullName) {
+      return fullName.replace(/\s*(?:season|Season)\s*\d+$/i, '').trim();
+    }
+
+    function getAvailableSeasons(baseName) {
+      const seasons = [];
+      const seasonRegex = new RegExp(`${baseName}\\s*(?:season|Season)?\\s*(\\d+)`, 'i');
+      
+      for (const animeName in animeEpisodes) {
+        if (animeName.startsWith(baseName) || (animeName.toLowerCase().startsWith(baseName.toLowerCase()))) {
+          const match = animeName.match(seasonRegex);
+          if (match) {
+            const seasonNum = parseInt(match[1]);
+            seasons.push({
+              number: seasonNum,
+              fullName: animeName
+            });
+          } else if (animeName.toLowerCase() === baseName.toLowerCase()) {
+            seasons.push({
+              number: 1,
+              fullName: animeName
+            });
+          }
+        }
+      }
+      
+      seasons.sort((a, b) => a.number - b.number);
+      return seasons;
+    }
+
+    function createSeasonButtons(baseName, currentSeasonName) {
+      const seasonsContainer = document.getElementById('season-list');
+      seasonsContainer.innerHTML = '';
+      
+      const availableSeasons = getAvailableSeasons(baseName);
+      
+      if (availableSeasons.length <= 1) {
+        document.querySelector('.seasons').style.display = 'none';
+        return;
+      }
+      
+      document.querySelector('.seasons').style.display = 'block';
+      
+      availableSeasons.forEach(season => {
+        const seasonDiv = document.createElement('div');
+        seasonDiv.className = 'season';
+        if (season.fullName === currentSeasonName) {
+          seasonDiv.style.boxShadow = '0 0 15px #FFE5B4';
+        }
+        
+        seasonDiv.innerHTML = `
+          <h4>Season ${season.number}</h4>
+          <p>${animeEpisodes[season.fullName]?.length || 0} Episodes</p>
+        `;
+        
+        seasonDiv.onclick = () => {
+          window.location.href = `watch.html?anime=${encodeURIComponent(season.fullName)}`;
+        };
+        
+        seasonsContainer.appendChild(seasonDiv);
+      });
+    }
+
+    function loadComments() {
+      const commentsContainer = document.getElementById('comments-container');
+      commentsContainer.innerHTML = '';
+      
+      const allComments = JSON.parse(localStorage.getItem('animeComments')) || {};
+      const animeComments = allComments[animeTitle] || [];
+      
+      if (animeComments.length === 0) {
+        commentsContainer.innerHTML = '<p style="text-align: center; color: rgba(255, 229, 180, 0.7);">No comments yet. Be the first to comment!</p>';
+        return;
+      }
+      
+      animeComments.forEach(comment => {
+        const username = comment.username || 'Anonymous';
+        const firstLetter = username.charAt(0).toUpperCase();
+        
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment';
+        
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'comment-avatar';
+        avatarDiv.textContent = firstLetter;
+        avatarDiv.style.backgroundColor = getAvatarColor(firstLetter);
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'comment-content';
+        
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'comment-header';
+        
+        const userDiv = document.createElement('span');
+        userDiv.className = 'comment-user';
+        userDiv.textContent = username;
+        
+        const timeDiv = document.createElement('span');
+        timeDiv.className = 'comment-time';
+        timeDiv.textContent = new Date(comment.timestamp).toLocaleString();
+        
+        const textDiv = document.createElement('div');
+        textDiv.className = 'comment-text';
+        textDiv.textContent = comment.text;
+        
+        headerDiv.appendChild(userDiv);
+        headerDiv.appendChild(timeDiv);
+        contentDiv.appendChild(headerDiv);
+        contentDiv.appendChild(textDiv);
+        commentDiv.appendChild(avatarDiv);
+        commentDiv.appendChild(contentDiv);
+        
+        commentsContainer.appendChild(commentDiv);
+      });
+    }
+
+    function postComment() {
+      const commentInput = document.getElementById('comment-input');
+      const commentText = commentInput.value.trim();
+      
+      if (!commentText) {
+        alert('Please enter a comment before posting');
+        return;
+      }
+      
+      const username = localStorage.getItem('currentUser') || 'Anonymous';
+      const allComments = JSON.parse(localStorage.getItem('animeComments')) || {};
+      const animeComments = allComments[animeTitle] || [];
+      
+      animeComments.push({
+        username: username,
+        text: commentText,
+        timestamp: new Date().toISOString()
+      });
+      
+      allComments[animeTitle] = animeComments;
+      localStorage.setItem('animeComments', JSON.stringify(allComments));
+      
+      commentInput.value = '';
+      loadComments();
+    }
+
+    if (!localStorage.getItem('currentUser')) {
+      const randomUser = 'User' + Math.floor(Math.random() * 1000);
+      localStorage.setItem('currentUser', randomUser);
+    }
+    
+    if (animeTitle && animeEpisodes[animeTitle]) {
+      console.log('Episodes found for:', animeTitle);
+      const baseAnimeName = getBaseAnimeName(animeTitle);
+      createSeasonButtons(baseAnimeName, animeTitle);
+      populateEpisodeList(animeEpisodes[animeTitle]);
+      if (animeEpisodes[animeTitle].length > 0) {
+        loadEpisode(animeEpisodes[animeTitle][0].file, animeEpisodes[animeTitle][0].title);
+      }
+      loadComments();
+    } else {
+      console.error('Anime not found:', animeTitle);
+      document.getElementById('anime-title').textContent = 'Anime not found!';
+    }
+
+    document.addEventListener('DOMContentLoaded', loadComments);
+  </script>
+</body>
+</html>
