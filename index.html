@@ -26,28 +26,86 @@
       background-color: var(--background);
       color: var(--text);
     }
+
+    /* Custom Scrollbar - Big and Rounded like the image */
+    ::-webkit-scrollbar {
+      width: 14px;
+      height: 14px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1A1A1A;
+      border-radius: 10px;
+      margin: 4px 0;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+      border: 3px solid #1A1A1A;
+      transition: background 0.3s;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d4b88c;
+    }
+
+    /* Firefox scrollbar */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) #1A1A1A;
+    }
    
-    /* Header with Settings Button and Search Bar */
+    /* Header - Transparent background */
     .header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      background-color: #2C2C2C;
-      padding: 10px 20px;
+      background: transparent;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      transition: background 0.3s ease;
+    }
+
+    /* Header becomes light grey when scrolled */
+    .header.scrolled {
+      background: rgba(44, 44, 44, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Logo Text */
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+
+    .logo-text .zero {
+      color: var(--primary);
+    }
+
+    .logo-text .anime {
+      color: #FFFFFF;
     }
    
-    /* Settings Button (Three Lines) */
+    /* Settings Button (Three Lines) - White */
     .settings-button {
       background: none;
       border: none;
       cursor: pointer;
-      padding: 10px;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -57,37 +115,106 @@
     .settings-button span {
       width: 24px;
       height: 3px;
-      background-color: #FFE5B4;
+      background-color: #FFFFFF;
       border-radius: 2px;
       transition: 0.3s;
     }
    
     .settings-button:hover span {
-      background-color: rgba(255, 229, 180, 0.8);
+      background-color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Header Center - Search Bar and Social Icons */
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+      justify-content: center;
+      max-width: 500px;
     }
    
-    /* Search Bar */
+    /* Search Bar - White background, curved */
     .search-bar {
-      width: 200px;
-      padding: 8px 15px;
-      border: 2px solid #FFE5B4;
-      border-radius: 20px;
-      background-color: rgba(68, 68, 68, 0.9);
-      color: #FFE5B4;
+      flex: 1;
+      padding: 9px 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 25px;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
       font-size: 14px;
       outline: none;
       transition: all 0.3s ease;
+      min-width: 120px;
+      backdrop-filter: blur(5px);
     }
    
     .search-bar::placeholder {
-      color: #FFE5B4;
+      color: rgba(255, 255, 255, 0.6);
       font-style: italic;
-      opacity: 0.7;
     }
    
     .search-bar:focus {
-      border-color: #FFE5B4;
-      box-shadow: 0 0 10px rgba(255, 229, 180, 0.8);
+      border-color: var(--primary);
+      background-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 20px rgba(255, 229, 180, 0.15);
+    }
+
+    /* Social Icons - Bigger */
+    .social-icons {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .social-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: #FFFFFF;
+      font-size: 16px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .social-icon:hover {
+      background: var(--primary);
+      color: #000;
+      transform: scale(1.12);
+      border-color: var(--primary);
+    }
+
+    .social-icon img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    /* Login Button - Curved */
+    .login-btn {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      padding: 9px 26px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-left: 5px;
+    }
+
+    .login-btn:hover {
+      background: #d4b88c;
+      transform: scale(1.04);
+      box-shadow: 0 4px 20px rgba(255, 229, 180, 0.3);
     }
    
     /* Sidebar */
@@ -122,8 +249,21 @@
     .hero-slider {
       position: relative;
       height: 70vh;
-      margin-top: 70px; /* Adjusted to account for just the settings header */
+      margin-top: 0;
       overflow: hidden;
+    }
+
+    /* Fade gradient overlay like aniwatch */
+    .hero-slider::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60%;
+      background: linear-gradient(to top, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.7) 40%, rgba(26, 26, 26, 0.3) 70%, transparent 100%);
+      pointer-events: none;
+      z-index: 3;
     }
    
     .hero-slide {
@@ -133,10 +273,10 @@
       width: 100%;
       height: 100%;
       background-size: cover;
-      background-position: center;
+      background-position: center top;
       display: flex;
-      align-items: center;
-      padding: 0 5%;
+      align-items: flex-end;
+      padding: 0 5% 80px;
       opacity: 0;
       transition: opacity 1s ease;
     }
@@ -147,20 +287,37 @@
    
     .hero-content {
       max-width: 600px;
-      background: rgba(0, 0, 0, 0.7);
+      position: relative;
+      z-index: 4;
       padding: 30px;
       border-radius: 10px;
+    }
+
+    .hero-content .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #000;
+      padding: 3px 14px;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
    
     .hero-slide h1 {
       font-size: 3rem;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       color: var(--primary);
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
     }
    
     .hero-slide p {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       line-height: 1.6;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      opacity: 0.9;
     }
    
     .hero-buttons {
@@ -183,9 +340,10 @@
     }
    
     .btn-secondary {
-      background-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.15);
       color: white;
       backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
    
     .btn:hover {
@@ -195,7 +353,7 @@
    
     .slider-nav {
       position: absolute;
-      bottom: 20px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -204,47 +362,52 @@
     }
    
     .slider-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.3);
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, width 0.3s;
     }
    
     .slider-dot.active {
       background: var(--primary);
+      width: 60px;
+    }
+   
+    /* Arrow controls - Grey styled like aniwatch */
+    .slider-arrows {
+      position: absolute;
+      bottom: 80px;
+      right: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
     }
    
     .slider-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      background: rgba(180, 180, 180, 0.25);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      z-index: 10;
       transition: all 0.3s;
+      font-size: 1.2rem;
+      font-weight: bold;
+      backdrop-filter: blur(5px);
+      user-select: none;
     }
    
     .slider-arrow:hover {
       background: var(--primary);
       color: black;
-    }
-   
-    .slider-arrow.left {
-      left: 20px;
-    }
-   
-    .slider-arrow.right {
-      right: 20px;
+      border-color: var(--primary);
     }
    
     /* Main Content */
@@ -353,6 +516,7 @@
       overflow: hidden;
       display: flex;
       transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
     }
    
     .episode-card:hover {
@@ -531,20 +695,196 @@
     .view-all-link:hover {
       text-decoration: underline;
     }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .header-center {
+        max-width: 350px;
+      }
+      .social-icons {
+        gap: 8px;
+      }
+      .social-icon {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+      }
+      .social-icon img {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      .slider-arrows {
+        bottom: 60px;
+        right: 15px;
+      }
+      .slider-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+      .hero-content {
+        padding: 20px;
+      }
+      .vertical-sections {
+        grid-template-columns: 1fr 1fr;
+      }
+      .logo-text {
+        font-size: 1.2rem;
+        margin-right: 8px;
+      }
+      .search-bar {
+        font-size: 12px;
+        padding: 7px 14px;
+        min-width: 80px;
+      }
+      .header-center {
+        gap: 8px;
+        max-width: 250px;
+      }
+      .slider-dot {
+        width: 30px;
+      }
+      .slider-dot.active {
+        width: 40px;
+      }
+      .social-icons {
+        gap: 6px;
+      }
+      .social-icon {
+        width: 26px;
+        height: 26px;
+        font-size: 12px;
+      }
+      .social-icon img {
+        width: 14px;
+        height: 14px;
+      }
+      .login-btn {
+        padding: 6px 16px;
+        font-size: 0.75rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      .slider-arrows {
+        bottom: 50px;
+        right: 10px;
+      }
+      .slider-arrow {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+      }
+      .hero-content h1 {
+        font-size: 1.5rem;
+      }
+      .vertical-sections {
+        grid-template-columns: 1fr;
+      }
+      .anime-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+      .logo-text {
+        font-size: 1rem;
+        margin-right: 5px;
+      }
+      .search-bar {
+        font-size: 11px;
+        padding: 5px 10px;
+        min-width: 60px;
+      }
+      .header {
+        padding: 8px 12px;
+      }
+      .header-left {
+        gap: 6px;
+      }
+      .header-center {
+        gap: 5px;
+        max-width: 180px;
+      }
+      .slider-dot {
+        width: 25px;
+        height: 3px;
+      }
+      .slider-dot.active {
+        width: 35px;
+      }
+      .social-icons {
+        gap: 4px;
+      }
+      .social-icon {
+        width: 22px;
+        height: 22px;
+        font-size: 10px;
+        border-radius: 50%;
+      }
+      .social-icon img {
+        width: 12px;
+        height: 12px;
+      }
+      .login-btn {
+        padding: 4px 12px;
+        font-size: 0.65rem;
+        border-radius: 20px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Settings Header -->
-  <div class="header">
-    <!-- Settings Button -->
-    <button class="settings-button">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-   
-    <!-- Search Bar -->
-    <input type="text" class="search-bar" placeholder="Search anime...">
+  <div class="header" id="header">
+    <div class="header-left">
+      <!-- Settings Button (Three Lines) - White -->
+      <button class="settings-button">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+     
+      <!-- Logo Text -->
+      <a href="index.html" class="logo-text">
+        <span class="zero">Zero</span><span class="anime">Anime</span>
+      </a>
+    </div>
+
+    <!-- Header Center - Search Bar and Social Icons -->
+    <div class="header-center">
+      <!-- Search Bar - White background, curved -->
+      <input type="text" class="search-bar" placeholder="Search anime...">
+      
+      <!-- Social Icons -->
+      <div class="social-icons">
+        <a href="#" class="social-icon" id="discord-icon" title="Discord">
+          <i class="fab fa-discord"></i>
+        </a>
+        <a href="#" class="social-icon" id="telegram-icon" title="Telegram">
+          <i class="fab fa-telegram-plane"></i>
+        </a>
+        <a href="#" class="social-icon" id="reddit-icon" title="Reddit">
+          <i class="fab fa-reddit-alien"></i>
+        </a>
+        <a href="#" class="social-icon" id="x-icon" title="X (Twitter)">
+          <i class="fab fa-x-twitter"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Login Button - Curved -->
+    <button class="login-btn">Login</button>
   </div>
  
   <!-- Sidebar -->
@@ -554,41 +894,47 @@
 
   <!-- Hero Slider -->
   <div class="hero-slider">   
-    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/599af186ad72e94caab6223b23fc22c6.jpg');">
+    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/599af186ad72e94caab6223b23fc22c6.jpg');">
       <div class="hero-content">
-        <h1>SOLO LEVELING SEASON 2</h1>
+        <span class="badge">#1 Spotlight</span>
+        <h1>Solo Leveling<br>Season 2</h1>
         <p>After becoming the world's weakest hunter and gaining the ability to level up, Sung Jin-Woo takes on even greater challenges in this highly anticipated series.</p>
         <div class="hero-buttons">
           <button class="btn btn-primary" onclick="watchAnime('Solo Leveling season 2')">Watch Now</button>
-          <button class="btn btn-secondary">+ My List</button>
+          <button class="btn btn-secondary">Detail</button>
         </div>
       </div>
     </div>
    
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/58d0b99666b285d2c484fec5dfaa23f0.jpg');">
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/58d0b99666b285d2c484fec5dfaa23f0.jpg');">
       <div class="hero-content">
+        <span class="badge">#2 Trending</span>
         <h1>Bleach</h1>
         <p>Ichigo Kurosaki is an ordinary high schooler—until his family is attacked by a Hollow.</p>
         <div class="hero-buttons">
           <button class="btn btn-primary" onclick="watchAnime('Jujutsu Kaisen')">Watch Now</button>
-          <button class="btn btn-secondary">+ My List</button>
+          <button class="btn btn-secondary">Detail</button>
         </div>
       </div>
     </div>
    
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/e5dee087051734a86d59c748b6bf201a.jpg');">
+    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/e5dee087051734a86d59c748b6bf201a.jpg');">
       <div class="hero-content">
-        <h1>Fire Force Season 3</h1>
+        <span class="badge">#3 New Season</span>
+        <h1>Fire Force<br>Season 3</h1>
         <p>Shinra Kusakabe joins Special Fire Force Company 8 to uncover the truth behind a mysterious phenomenon that turns people into living infernos.</p>
         <div class="hero-buttons">
           <button class="btn btn-primary" onclick="watchAnime('Dandadan')">Watch Now</button>
-          <button class="btn btn-secondary">+ My List</button>
+          <button class="btn btn-secondary">Detail</button>
         </div>
       </div>
     </div>
    
-    <button class="slider-arrow left" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
-    <button class="slider-arrow right" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+    <!-- Arrow Controls - Grey styled stacked on bottom right -->
+    <div class="slider-arrows">
+      <button class="slider-arrow" onclick="prevSlide()">&#62;</button>
+      <button class="slider-arrow" onclick="nextSlide()">&#60;</button>
+    </div>
    
     <div class="slider-nav">
       <div class="slider-dot active" onclick="goToSlide(0)"></div>
@@ -1231,6 +1577,16 @@
       const settingsButton = document.querySelector('.settings-button');
       if (!sidebar.contains(event.target) && !settingsButton.contains(event.target)) {
         closeSidebar();
+      }
+    });
+
+    // Header scroll effect - becomes light grey when scrolled
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
       }
     });
    
