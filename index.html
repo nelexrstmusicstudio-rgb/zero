@@ -63,7 +63,7 @@
       left: 0;
       right: 0;
       background: transparent;
-      padding: 12px 20px;
+      padding: 14px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -75,18 +75,18 @@
     .header.scrolled {
       background: rgba(44, 44, 44, 0.95);
       backdrop-filter: blur(10px);
-      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.5);
     }
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     /* Logo Text */
     .logo-text {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: bold;
       text-decoration: none;
       margin-right: 15px;
@@ -138,9 +138,9 @@
     .search-bar {
       flex: 1;
       padding: 9px 18px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.25);
       border-radius: 25px;
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.12);
       color: #FFFFFF;
       font-size: 14px;
       outline: none;
@@ -156,7 +156,7 @@
    
     .search-bar:focus {
       border-color: var(--primary);
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: rgba(255, 255, 255, 0.2);
       box-shadow: 0 0 20px rgba(255, 229, 180, 0.15);
     }
 
@@ -245,25 +245,38 @@
       color: #000000;
     }
    
-    /* Hero Slider */
+    /* Hero Slider - BIGGER */
     .hero-slider {
       position: relative;
-      height: 70vh;
+      height: 90vh;
       margin-top: 0;
       overflow: hidden;
+      min-height: 600px;
     }
 
-    /* Fade gradient overlay like aniwatch */
+    /* Fade gradient overlay - darker and deeper */
     .hero-slider::after {
       content: '';
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 60%;
-      background: linear-gradient(to top, rgba(26, 26, 26, 0.95) 0%, rgba(26, 26, 26, 0.7) 40%, rgba(26, 26, 26, 0.3) 70%, transparent 100%);
+      height: 70%;
+      background: linear-gradient(to top, rgba(26, 26, 26, 0.98) 0%, rgba(26, 26, 26, 0.8) 30%, rgba(26, 26, 26, 0.4) 60%, transparent 100%);
       pointer-events: none;
       z-index: 3;
+    }
+
+    /* Dark overlay on the image for deeper shadow */
+    .hero-slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
     }
    
     .hero-slide {
@@ -276,9 +289,9 @@
       background-position: center top;
       display: flex;
       align-items: flex-end;
-      padding: 0 5% 80px;
+      padding: 0 5% 100px;
       opacity: 0;
-      transition: opacity 1s ease;
+      transition: opacity 1.2s ease;
     }
    
     .hero-slide.active {
@@ -286,38 +299,44 @@
     }
    
     .hero-content {
-      max-width: 600px;
+      max-width: 650px;
       position: relative;
       z-index: 4;
-      padding: 30px;
-      border-radius: 10px;
+      padding: 35px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .hero-content .badge {
       display: inline-block;
       background: var(--primary);
       color: #000;
-      padding: 3px 14px;
+      padding: 4px 16px;
       border-radius: 15px;
       font-size: 0.75rem;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
    
     .hero-slide h1 {
-      font-size: 3rem;
-      margin-bottom: 15px;
+      font-size: 4rem;
+      margin-bottom: 16px;
       color: var(--primary);
-      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+      line-height: 1.1;
     }
    
     .hero-slide p {
-      margin-bottom: 25px;
-      line-height: 1.6;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-      opacity: 0.9;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 28px;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+      opacity: 0.95;
+      max-width: 550px;
     }
    
     .hero-buttons {
@@ -326,12 +345,13 @@
     }
    
     .btn {
-      padding: 12px 25px;
+      padding: 13px 30px;
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
       border: none;
+      font-size: 0.95rem;
     }
    
     .btn-primary {
@@ -339,30 +359,36 @@
       color: #000;
     }
    
+    .btn-primary:hover {
+      background: #d4b88c;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(255, 229, 180, 0.4);
+    }
+   
     .btn-secondary {
       background-color: rgba(255, 255, 255, 0.15);
       color: white;
       backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
    
-    .btn:hover {
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
       transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
    
     .slider-nav {
       position: absolute;
-      bottom: 30px;
+      bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 10px;
+      gap: 12px;
       z-index: 10;
     }
    
     .slider-dot {
-      width: 40px;
+      width: 45px;
       height: 4px;
       border-radius: 2px;
       background: rgba(255, 255, 255, 0.3);
@@ -372,17 +398,17 @@
    
     .slider-dot.active {
       background: var(--primary);
-      width: 60px;
+      width: 70px;
     }
    
     /* Arrow controls - Grey styled like aniwatch */
     .slider-arrows {
       position: absolute;
-      bottom: 80px;
-      right: 30px;
+      bottom: 100px;
+      right: 40px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       z-index: 10;
     }
    
@@ -390,15 +416,15 @@
       background: rgba(180, 180, 180, 0.25);
       color: rgba(255, 255, 255, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.3s;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
       backdrop-filter: blur(5px);
       user-select: none;
@@ -713,6 +739,13 @@
         width: 16px;
         height: 16px;
       }
+      .hero-slide h1 {
+        font-size: 3rem;
+      }
+      .hero-slider {
+        height: 80vh;
+        min-height: 500px;
+      }
     }
 
     @media (max-width: 768px) {
@@ -720,19 +753,27 @@
         width: 10px;
       }
       .slider-arrows {
-        bottom: 60px;
+        bottom: 70px;
         right: 15px;
       }
       .slider-arrow {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         font-size: 1rem;
       }
-      .hero-content h1 {
-        font-size: 2rem;
+      .hero-slide h1 {
+        font-size: 2.5rem;
       }
       .hero-content {
-        padding: 20px;
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.5);
+      }
+      .hero-slide p {
+        font-size: 0.9rem;
+      }
+      .hero-slider {
+        height: 70vh;
+        min-height: 400px;
       }
       .vertical-sections {
         grid-template-columns: 1fr 1fr;
@@ -772,6 +813,12 @@
         padding: 6px 16px;
         font-size: 0.75rem;
       }
+      .hero-slide {
+        padding: 0 5% 70px;
+      }
+      .slider-nav {
+        bottom: 30px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -779,17 +826,27 @@
         width: 8px;
       }
       .slider-arrows {
-        bottom: 50px;
+        bottom: 60px;
         right: 10px;
       }
       .slider-arrow {
-        width: 30px;
-        height: 30px;
+        width: 32px;
+        height: 32px;
         font-size: 0.8rem;
         border-radius: 6px;
       }
-      .hero-content h1 {
-        font-size: 1.5rem;
+      .hero-slide h1 {
+        font-size: 1.8rem;
+      }
+      .hero-slide p {
+        font-size: 0.8rem;
+      }
+      .hero-content {
+        padding: 18px;
+      }
+      .hero-slider {
+        height: 60vh;
+        min-height: 350px;
       }
       .vertical-sections {
         grid-template-columns: 1fr;
@@ -840,6 +897,16 @@
         padding: 4px 12px;
         font-size: 0.65rem;
         border-radius: 20px;
+      }
+      .hero-slide {
+        padding: 0 5% 50px;
+      }
+      .slider-nav {
+        bottom: 20px;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -894,7 +961,7 @@
 
   <!-- Hero Slider -->
   <div class="hero-slider">   
-    <div class="hero-slide active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/599af186ad72e94caab6223b23fc22c6.jpg');">
+    <div class="hero-slide active" style="background-image: url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/599af186ad72e94caab6223b23fc22c6.jpg');">
       <div class="hero-content">
         <span class="badge">#1 Spotlight</span>
         <h1>Solo Leveling<br>Season 2</h1>
@@ -906,7 +973,7 @@
       </div>
     </div>
    
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/58d0b99666b285d2c484fec5dfaa23f0.jpg');">
+    <div class="hero-slide" style="background-image: url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/58d0b99666b285d2c484fec5dfaa23f0.jpg');">
       <div class="hero-content">
         <span class="badge">#2 Trending</span>
         <h1>Bleach</h1>
@@ -918,7 +985,7 @@
       </div>
     </div>
    
-    <div class="hero-slide" style="background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6)), url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/e5dee087051734a86d59c748b6bf201a.jpg');">
+    <div class="hero-slide" style="background-image: url('https://cdn.noitatnemucod.net/thumbnail/1366x768/100/e5dee087051734a86d59c748b6bf201a.jpg');">
       <div class="hero-content">
         <span class="badge">#3 New Season</span>
         <h1>Fire Force<br>Season 3</h1>
@@ -1616,8 +1683,8 @@
       showSlide(n);
     }
    
-    // Auto slide change every 5 seconds
-    setInterval(nextSlide, 5000);
+    // Auto slide change every 6 seconds
+    setInterval(nextSlide, 6000);
    
     // Watch anime function
     function watchAnime(title) {
