@@ -866,7 +866,7 @@
     // ----- ANIME EPISODES WITH MEGA LINKS -----
     const animeEpisodes = {
       'Solo Leveling season 2': [
-        { title: 'Episode 1', file: 'https://mega.nz/file/upR13KyI#BmSz9QEeRik4Z0yG9gVw-Xk6eh_wDtIlq5K7glLJPXQ' },
+        { title: 'Episode 1', file: 'https://mega.nz/embed/upR13KyI#BmSz9QEeRik4Z0yG9gVw-Xk6eh_wDtIlq5K7glLJPXQ' },
         { title: 'Episode 2', file: 'https://mega.nz/embed/DwJExQxB#tgqGvMkPzYmDnHcukv7Yt4cFS2LviYI9lOTtJ2qeTTI' },
         { title: 'Episode 3', file: 'https://mega.nz/embed/6pAxxCIA#hw0cqvJhecIOW0eiZsk7-8WgFJIgF_8wtjCc4PuupyU' },
         { title: 'Episode 4', file: 'https://mega.nz/embed/ehpi0DCL#Lj7-8WwsnVsXf-5mehzHZUOLc1k7_7I6-bCQRfKLbkM' },
@@ -1362,7 +1362,15 @@
 
     function loadEpisode(videoFile, episodeTitle, episodeIndex) {
       const videoPlayer = document.getElementById('video-player');
-      videoPlayer.src = videoFile;
+      
+      // If the file is a Mega link, convert it to embed format if needed
+      let finalUrl = videoFile;
+      if (videoFile && videoFile.includes('mega.nz/file/')) {
+        // Convert /file/ to /embed/
+        finalUrl = videoFile.replace('/file/', '/embed/');
+      }
+      
+      videoPlayer.src = finalUrl;
       document.getElementById('anime-title').textContent = `Now Playing: ${episodeTitle}`;
       markEpisodeAsWatched(episodeTitle);
       
