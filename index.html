@@ -173,6 +173,98 @@
       box-shadow: 0 0 30px rgba(255, 229, 180, 0.1);
     }
 
+    /* Search Dropdown */
+    .search-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 26, 0.92);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      margin-top: 8px;
+      max-height: 350px;
+      overflow-y: auto;
+      display: none;
+      z-index: 1001;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .search-dropdown.active {
+      display: block;
+    }
+
+    .search-dropdown::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .search-dropdown::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .search-dropdown::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .search-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .search-dropdown-item:hover {
+      background: rgba(255, 229, 180, 0.08);
+    }
+
+    .search-dropdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-dropdown-item img {
+      width: 40px;
+      height: 55px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .search-dropdown-item .item-info {
+      flex: 1;
+    }
+
+    .search-dropdown-item .item-info .item-title {
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .search-dropdown-item .item-info .item-type {
+      color: #888;
+      font-size: 0.7rem;
+    }
+
+    .search-dropdown-item .item-play {
+      color: var(--primary);
+      font-size: 0.8rem;
+      opacity: 0.5;
+    }
+
+    .search-dropdown-item:hover .item-play {
+      opacity: 1;
+    }
+
+    .search-dropdown .no-results {
+      padding: 20px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
     .social-icons {
       display: flex;
       align-items: center;
@@ -714,7 +806,7 @@
       font-size: 0.85rem;
     }
    
-    /* Comments Section - Horizontal curved boxes like aniwatch */
+    /* Comments Section */
     .comments-section {
       background: var(--card-bg);
       border-radius: 12px;
@@ -755,7 +847,6 @@
       color: var(--primary);
     }
 
-    /* Horizontal layout - image on left, comments grid on right */
     .comments-horizontal {
       display: flex;
       gap: 25px;
@@ -792,7 +883,6 @@
       min-width: 0;
     }
 
-    /* Horizontal comment cards */
     .comment-card-horizontal {
       background: #1a1a1a;
       border-radius: 12px;
@@ -873,7 +963,6 @@
       color: var(--primary);
     }
 
-    /* Comment input */
     .comment-input-wrapper {
       display: flex;
       gap: 12px;
@@ -1033,7 +1122,7 @@
       text-decoration: underline;
     }
 
-    /* Search Results */
+    /* Search Results Page */
     .search-results-page {
       display: none;
       padding: 100px 5% 40px;
@@ -1580,7 +1669,10 @@
 
     <div class="header-center">
       <div class="search-wrapper" id="searchWrapper">
-        <input type="text" class="search-bar" id="searchInput" placeholder="Search anime..." onkeydown="handleSearch(event)" onfocus="document.getElementById('searchWrapper').classList.add('focused')" onblur="document.getElementById('searchWrapper').classList.remove('focused')">
+        <input type="text" class="search-bar" id="searchInput" placeholder="Search anime..." onkeydown="handleSearchKeydown(event)" onfocus="document.getElementById('searchWrapper').classList.add('focused')" onblur="setTimeout(() => { document.getElementById('searchWrapper').classList.remove('focused'); closeDropdown(); }, 200)" oninput="handleSearchInput(this.value)">
+        
+        <!-- Search Dropdown -->
+        <div class="search-dropdown" id="searchDropdown"></div>
       </div>
       
       <div class="social-icons">
@@ -1683,7 +1775,6 @@
       </div>
     </div>
 
-    <!-- Rest of Content -->
     <div class="container">
       <div class="status-message">- - if the anime episodes are missing it's being worked on or report to our discord for updates - -</div>
      
@@ -1735,9 +1826,7 @@
       <!-- Share Section -->
       <div class="share-section">
         <div class="share-left">
-          <div class="share-icon">
-            <i class="fas fa-share-alt"></i>
-          </div>
+          <div class="share-icon"><i class="fas fa-share-alt"></i></div>
           <div class="share-text">
             <h3>Share ZeroAnime</h3>
             <p>Share with your friends and get them to join!</p>
@@ -1745,13 +1834,11 @@
         </div>
         <div class="share-right">
           <span class="share-count">105k Shares</span>
-          <button class="share-btn" onclick="shareSite()">
-            <i class="fas fa-share-alt"></i> Share Now
-          </button>
+          <button class="share-btn" onclick="shareSite()"><i class="fas fa-share-alt"></i> Share Now</button>
         </div>
       </div>
 
-      <!-- Comments Section - Horizontal curved boxes -->
+      <!-- Comments Section -->
       <div class="comments-section" id="commentsSection">
         <div class="comments-top">
           <span class="comments-title">Comments</span>
@@ -1767,9 +1854,7 @@
             <img src="https://aniwatch.co.at/wp-content/themes/Zoro-Tv/assets/images/discussion.png" alt="Discussion">
             <span class="discussion-label">Discussion</span>
           </div>
-          <div class="comments-right-grid" id="commentsGrid">
-            <!-- Comments will be loaded here from localStorage -->
-          </div>
+          <div class="comments-right-grid" id="commentsGrid"></div>
         </div>
 
         <div class="comment-input-wrapper">
@@ -1785,38 +1870,23 @@
           <div class="vertical-anime-list">
             <div class="vertical-anime-item" onclick="watchAnime('Solo Leveling season 2')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg" alt="Solo Leveling season 2">
-              <div class="vertical-anime-info">
-                <h4>Solo Leveling season 2</h4>
-                <div class="episode">EP 12</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Solo Leveling season 2</h4><div class="episode">EP 12</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Jujutsu Kaisen')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/82402f796b7d84d7071ab1e03ff7747a.jpg" alt="Jujutsu Kaisen">
-              <div class="vertical-anime-info">
-                <h4>Jujutsu Kaisen</h4>
-                <div class="episode">EP 24</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Jujutsu Kaisen</h4><div class="episode">EP 24</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Dandadan')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/a8b56a7589ff9edb6c86977c31e27a06.jpg" alt="Dandadan">
-              <div class="vertical-anime-info">
-                <h4>Dandadan</h4>
-                <div class="episode">EP 8</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Dandadan</h4><div class="episode">EP 8</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('The Apothecary Diaries')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/c7346b9cd930d501d2b6b40770b2b1d0.jpg" alt="The Apothecary Diaries">
-              <div class="vertical-anime-info">
-                <h4>The Apothecary Diaries</h4>
-                <div class="episode">EP 10</div>
-              </div>
+              <div class="vertical-anime-info"><h4>The Apothecary Diaries</h4><div class="episode">EP 10</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('One Piece')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bcd84731a3eda4f4a306250769675065.jpg" alt="One Piece">
-              <div class="vertical-anime-info">
-                <h4>One Piece</h4>
-                <div class="episode">EP 1092</div>
-              </div>
+              <div class="vertical-anime-info"><h4>One Piece</h4><div class="episode">EP 1092</div></div>
             </div>
           </div>
           <a href="#" class="view-all-link">View All</a>
@@ -1827,38 +1897,23 @@
           <div class="vertical-anime-list">
             <div class="vertical-anime-item" onclick="watchAnime('Naruto: Shippuden')">
               <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx1735-kGfVm0YqCPcu.png" alt="Naruto: Shippuden">
-              <div class="vertical-anime-info">
-                <h4>Naruto: Shippuden</h4>
-                <div class="episode">EP 500</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Naruto: Shippuden</h4><div class="episode">EP 500</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Bleach')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/bd5ae1d387a59c5abcf5e1a6a616728c.jpg" alt="Bleach">
-              <div class="vertical-anime-info">
-                <h4>Bleach</h4>
-                <div class="episode">EP 366</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Bleach</h4><div class="episode">EP 366</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Vinland Saga')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9cc864ccccce7f38f7a100627ef21516.jpg" alt="Vinland Saga">
-              <div class="vertical-anime-info">
-                <h4>Vinland Saga</h4>
-                <div class="episode">EP 48</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Vinland Saga</h4><div class="episode">EP 48</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('That Time I Got Reincarnated as a Slime Season 3')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f9b501458823539b6a2004f2cdb98a4a.jpg" alt="Reincarnated as Slime">
-              <div class="vertical-anime-info">
-                <h4>Reincarnated as Slime S3</h4>
-                <div class="episode">EP 12</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Reincarnated as Slime S3</h4><div class="episode">EP 12</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('The Beginning After the End')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/9bc9db5df112e89f9bb5020db9dbd1f8.jpg" alt="The Beginning After the End">
-              <div class="vertical-anime-info">
-                <h4>The Beginning After the End</h4>
-                <div class="episode">EP 24</div>
-              </div>
+              <div class="vertical-anime-info"><h4>The Beginning After the End</h4><div class="episode">EP 24</div></div>
             </div>
           </div>
           <a href="#" class="view-all-link">View All</a>
@@ -1869,38 +1924,23 @@
           <div class="vertical-anime-list">
             <div class="vertical-anime-item" onclick="watchAnime('Solo Leveling Season 1')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/b147d331e311a5d5c8ee81269725fc92.png" alt="Solo Leveling Season 1">
-              <div class="vertical-anime-info">
-                <h4>Solo Leveling S1</h4>
-                <div class="episode">EP 12</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Solo Leveling S1</h4><div class="episode">EP 12</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('The Apothecary Diaries Season 2')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/c7346b9cd930d501d2b6b40770b2b1d0.jpg" alt="The Apothecary Diaries">
-              <div class="vertical-anime-info">
-                <h4>Apothecary Diaries S2</h4>
-                <div class="episode">EP 10</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Apothecary Diaries S2</h4><div class="episode">EP 10</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Seirei Gensouki: Spirit Chronicles Season 2')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/abc91d454286d59336fd5feb60f84537.jpg" alt="Seirei Gensouki: Spirit Chronicles">
-              <div class="vertical-anime-info">
-                <h4>Spirit Chronicles S2</h4>
-                <div class="episode">EP 12</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Spirit Chronicles S2</h4><div class="episode">EP 12</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('The 100 Girlfriends Who Really, Really Love You Season 2')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/e91ce663a30bda517c5a191c575a16c0.jpg" alt="The 100 Girlfriends">
-              <div class="vertical-anime-info">
-                <h4>100 Girlfriends S2</h4>
-                <div class="episode">EP 12</div>
-              </div>
+              <div class="vertical-anime-info"><h4>100 Girlfriends S2</h4><div class="episode">EP 12</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Am I Actually the Strongest?')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/f5143ba1266a0f80f5ea770e92721b47.png" alt="Am I Actually the Strongest?">
-              <div class="vertical-anime-info">
-                <h4>Am I Actually the Strongest?</h4>
-                <div class="episode">EP 12</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Am I Actually the Strongest?</h4><div class="episode">EP 12</div></div>
             </div>
           </div>
           <a href="#" class="view-all-link">View All</a>
@@ -1911,45 +1951,30 @@
           <div class="vertical-anime-list">
             <div class="vertical-anime-item" onclick="watchAnime('Fire Force Season 2')">
               <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx114236-wfQOWF0Ii3h2.png" alt="Fire Force">
-              <div class="vertical-anime-info">
-                <h4>Fire Force S2</h4>
-                <div class="episode">Completed</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Fire Force S2</h4><div class="episode">Completed</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Seirei Gensouki: Spirit Chronicles Season 1')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/d31ffa021edfe73060863960be6e34b8.jpg" alt="Seirei Gensouki: Spirit Chronicles">
-              <div class="vertical-anime-info">
-                <h4>Spirit Chronicles S1</h4>
-                <div class="episode">Completed</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Spirit Chronicles S1</h4><div class="episode">Completed</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('I Got a Cheat Skill in Another World')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/0ad5356f28ee75bccfde8b69ea6a5e54.jpg" alt="Cheat Skill Anime">
-              <div class="vertical-anime-info">
-                <h4>Cheat Skill Anime</h4>
-                <div class="episode">Completed</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Cheat Skill Anime</h4><div class="episode">Completed</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Kakushite! Makina-san!!')">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/62380f0676cc6f49ad718dc2fa8b8820.jpg" alt="Kakushite! Makina-san!!">
-              <div class="vertical-anime-info">
-                <h4>Kakushite! Makina-san!!</h4>
-                <div class="episode">Completed</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Kakushite! Makina-san!!</h4><div class="episode">Completed</div></div>
             </div>
             <div class="vertical-anime-item" onclick="watchAnime('Miss Caretaker of Sunohara-sou')">
               <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/nx100556-wmH1DPNTjklR.jpg" alt="Miss Caretaker of Sunohara-sou">
-              <div class="vertical-anime-info">
-                <h4>Miss Caretaker of Sunohara-sou</h4>
-                <div class="episode">Completed</div>
-              </div>
+              <div class="vertical-anime-info"><h4>Miss Caretaker of Sunohara-sou</h4><div class="episode">Completed</div></div>
             </div>
           </div>
           <a href="#" class="view-all-link">View All</a>
         </div>
       </div>
 
-      <!-- New Additions -->
+      <!-- New Additions - ALL ANIME INCLUDED -->
       <div class="section">
         <div class="section-title">
           <h2>New Additions</h2>
@@ -1967,10 +1992,7 @@
             <div class="anime-info">
               <h3>There was a Cute Girl in the Hero's Party</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.5
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.5</div>
             </div>
           </div>
 
@@ -1983,10 +2005,7 @@
             <div class="anime-info">
               <h3>Jack-Of-All-Trades, Party of None</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.2
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.2</div>
             </div>
           </div>
 
@@ -1999,10 +2018,7 @@
             <div class="anime-info">
               <h3>SPY x FAMILY</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.0
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.0</div>
             </div>
           </div>
 
@@ -2015,10 +2031,7 @@
             <div class="anime-info">
               <h3>SPY x FAMILY Season 2</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.9
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.9</div>
             </div>
           </div>
 
@@ -2031,10 +2044,7 @@
             <div class="anime-info">
               <h3>SPY x FAMILY Season 3</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.7
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.7</div>
             </div>
           </div>
 
@@ -2047,14 +2057,11 @@
             <div class="anime-info">
               <h3>The Maid I Hired Recently is Mysterious</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.3
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.3</div>
             </div>
           </div>
 
-          <!-- ORIGINAL ANIME CONTINUE HERE -->
+          <!-- ORIGINAL ANIME CONTINUE -->
           <div class="anime-card" onclick="watchAnime('Kakushite! Makina-san!!')">
             <div class="card-img">
               <img src="https://cdn.noitatnemucod.net/thumbnail/300x400/100/62380f0676cc6f49ad718dc2fa8b8820.jpg" alt="Kakushite! Makina-san!!">
@@ -2064,10 +2071,7 @@
             <div class="anime-info">
               <h3>Kakushite! Makina-san!!</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.1
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.1</div>
             </div>
           </div>
          
@@ -2080,10 +2084,7 @@
             <div class="anime-info">
               <h3>Yandere Dark Elf</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                7.9
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 7.9</div>
             </div>
           </div>
          
@@ -2096,10 +2097,7 @@
             <div class="anime-info">
               <h3>The Unaware Atelier Master</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.3
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.3</div>
             </div>
           </div>
          
@@ -2112,10 +2110,7 @@
             <div class="anime-info">
               <h3>Solo Leveling Season 2</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.8
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.8</div>
             </div>
           </div>
          
@@ -2128,10 +2123,7 @@
             <div class="anime-info">
               <h3>Please Put Them On, Takamine-san</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.4
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.4</div>
             </div>
           </div>
 
@@ -2144,10 +2136,7 @@
             <div class="anime-info">
               <h3>Beheneko: The Elf-Girl's Cat is Secretly an S-Ranked Monster!</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.7
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.7</div>
             </div>
           </div>
 
@@ -2160,10 +2149,7 @@
             <div class="anime-info">
               <h3>Dandadan</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.3
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.3</div>
             </div>
           </div>
 
@@ -2176,10 +2162,7 @@
             <div class="anime-info">
               <h3>One Piece</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.2
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.2</div>
             </div>
           </div>
 
@@ -2192,10 +2175,7 @@
             <div class="anime-info">
               <h3>The 100 Girlfriends Who Really, Really Love You Season 2</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.8
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.8</div>
             </div>
           </div>
 
@@ -2208,10 +2188,7 @@
             <div class="anime-info">
               <h3>Possibly the Greatest Alchemist of All Time</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.5
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.5</div>
             </div>
           </div>
 
@@ -2224,10 +2201,7 @@
             <div class="anime-info">
               <h3>Seirei Gensouki: Spirit Chronicles Season 1</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.0
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.0</div>
             </div>
           </div>
 
@@ -2240,10 +2214,7 @@
             <div class="anime-info">
               <h3>Seirei Gensouki: Spirit Chronicles Season 2</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.1
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.1</div>
             </div>
           </div>
 
@@ -2256,10 +2227,7 @@
             <div class="anime-info">
               <h3>Naruto: Shippuden</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.2
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.2</div>
             </div>
           </div>
 
@@ -2272,10 +2240,7 @@
             <div class="anime-info">
               <h3>Vinland Saga</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.4
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.4</div>
             </div>
           </div>
 
@@ -2288,10 +2253,7 @@
             <div class="anime-info">
               <h3>Miss Caretaker of Sunohara-sou</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.2
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.2</div>
             </div>
           </div>
 
@@ -2304,10 +2266,7 @@
             <div class="anime-info">
               <h3>Solo Leveling Season 1</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.7
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.7</div>
             </div>
           </div>
 
@@ -2320,10 +2279,7 @@
             <div class="anime-info">
               <h3>The Apothecary Diaries Season 2</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.3
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.3</div>
             </div>
           </div>
 
@@ -2336,10 +2292,7 @@
             <div class="anime-info">
               <h3>I May Be a Guild Receptionist</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.9
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.9</div>
             </div>
           </div>
 
@@ -2352,10 +2305,7 @@
             <div class="anime-info">
               <h3>Am I Actually the Strongest?</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.1
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.1</div>
             </div>
           </div>
 
@@ -2368,10 +2318,7 @@
             <div class="anime-info">
               <h3>Even Given the Worthless "Appraiser" Class</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.7
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.7</div>
             </div>
           </div>
 
@@ -2384,10 +2331,7 @@
             <div class="anime-info">
               <h3>Bleach</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.0
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.0</div>
             </div>
           </div>
 
@@ -2400,10 +2344,7 @@
             <div class="anime-info">
               <h3>Reincarnated as Slime Season 3</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.2
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.2</div>
             </div>
           </div>
 
@@ -2416,10 +2357,7 @@
             <div class="anime-info">
               <h3>Cheat Skill Anime</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.6
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.6</div>
             </div>
           </div>
 
@@ -2432,10 +2370,7 @@
             <div class="anime-info">
               <h3>The Beginning After the End</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                9.2
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 9.2</div>
             </div>
           </div>
 
@@ -2448,10 +2383,7 @@
             <div class="anime-info">
               <h3>I'm the Evil Lord of an Intergalactic Empire!</h3>
               <div class="episode">New</div>
-              <div class="rating">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                8.9
-              </div>
+              <div class="rating"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> 8.9</div>
             </div>
           </div>
         </div>
@@ -2507,7 +2439,7 @@
   </footer>
 
   <script>
-    // Anime database for search
+    // ----- ANIME DATABASE FOR SEARCH -----
     const animeDatabase = [
       { title: 'Solo Leveling season 2', image: 'https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg', type: 'TV' },
       { title: 'Solo Leveling Season 2', image: 'https://cdn.noitatnemucod.net/thumbnail/300x400/100/65f92e6e315a931ef872da4b312442b8.jpg', type: 'TV' },
@@ -2544,43 +2476,36 @@
       { title: 'SPY x FAMILY', image: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx140960-Kb6R5nYQfjmP.jpg', type: 'TV' },
       { title: 'SPY x FAMILY Season 2', image: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/b158927-lfO85WVguYgc.png', type: 'TV' },
       { title: 'SPY x FAMILY Season 3', image: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx177937-Tzgg6rAdhCoH.jpg', type: 'TV' },
-      { title: 'The Maid I Hired Recently is Mysterious', image: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx149326-qDJGf7IELKbL.jpg', type: 'TV' },
+      { title: 'The Maid I Hired Recently is Mysterious', image: 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx149326-qDJGf7IELKbL.jpg', type: 'TV' }
     ];
 
-    // Comments functions with localStorage
+    // ----- COMMENTS FUNCTIONS -----
     function loadComments() {
       const commentsGrid = document.getElementById('commentsGrid');
       const comments = JSON.parse(localStorage.getItem('siteComments')) || [];
       
       if (comments.length === 0) {
-        // Load default comments
         const defaultComments = [
           { user: 'Seff', time: '15 mins ago', text: 'Animation budget Hair:50% Capes:40% Others:10%' },
           { user: 'Jack Jonas', time: '23 mins ago', text: 'did the site lose most of its anime\'s catalog?' },
           { user: 'Tyrese', time: '5 hours ago', text: 'why doesnt full screen work?' },
-          { user: 'SKYriKZz', time: '6 hours ago', text: 'first ep so excited' },
+          { user: 'SKYriKZz', time: '6 hours ago', text: 'first ep so excited' }
         ];
         localStorage.setItem('siteComments', JSON.stringify(defaultComments));
         displayComments(defaultComments);
         return;
       }
-      
       displayComments(comments);
     }
 
     function displayComments(comments) {
       const commentsGrid = document.getElementById('commentsGrid');
       commentsGrid.innerHTML = '';
-      
-      // Show only first 4 comments for the grid
       const displayComments = comments.slice(0, 4);
-      
       displayComments.forEach(comment => {
         const card = document.createElement('div');
         card.className = 'comment-card-horizontal';
-        
         const initial = comment.user.charAt(0).toUpperCase();
-        
         card.innerHTML = `
           <div class="comment-header">
             <div class="comment-avatar">${initial}</div>
@@ -2588,12 +2513,8 @@
             <span class="comment-time">${comment.time}</span>
           </div>
           <div class="comment-text">${comment.text}</div>
-          <div class="comment-actions">
-            <span>Reply</span>
-            <span>Like</span>
-          </div>
+          <div class="comment-actions"><span>Reply</span><span>Like</span></div>
         `;
-        
         commentsGrid.appendChild(card);
       });
     }
@@ -2601,29 +2522,17 @@
     function postComment() {
       const input = document.getElementById('commentInput');
       const text = input.value.trim();
-      
       if (!text) return;
-      
       const comments = JSON.parse(localStorage.getItem('siteComments')) || [];
-      
-      const newComment = {
-        user: 'Guest',
-        time: 'Just now',
-        text: text
-      };
-      
-      comments.unshift(newComment);
+      comments.unshift({ user: 'Guest', time: 'Just now', text: text });
       localStorage.setItem('siteComments', JSON.stringify(comments));
-      
       input.value = '';
       displayComments(comments);
     }
 
-    // Comment tabs
     function switchCommentsTab(el, type) {
       document.querySelectorAll('.comment-tabs span').forEach(t => t.classList.remove('active'));
       el.classList.add('active');
-      
       if (type === 'hide') {
         document.getElementById('commentsGrid').style.display = 'none';
         document.querySelector('.comment-input-wrapper').style.display = 'none';
@@ -2636,7 +2545,7 @@
       }
     }
 
-    // Login functions
+    // ----- LOGIN FUNCTIONS -----
     function openLogin() {
       document.getElementById('loginOverlay').classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2648,33 +2557,104 @@
     }
 
     document.getElementById('loginOverlay').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeLogin();
-      }
+      if (e.target === this) closeLogin();
     });
 
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        const loginOverlay = document.getElementById('loginOverlay');
-        if (loginOverlay.classList.contains('active')) {
-          closeLogin();
-        }
-        const searchPage = document.getElementById('searchResultsPage');
-        if (searchPage.classList.contains('active')) {
-          goHome();
-        }
+    // ----- SEARCH FUNCTIONS -----
+    function handleSearchInput(value) {
+      const query = value.trim().toLowerCase();
+      const dropdown = document.getElementById('searchDropdown');
+      if (query.length === 0) { dropdown.classList.remove('active'); return; }
+      
+      const results = animeDatabase.filter(anime => anime.title.toLowerCase().includes(query));
+      dropdown.innerHTML = '';
+      
+      if (results.length === 0) {
+        dropdown.innerHTML = `<div class="no-results">No results found</div>`;
+      } else {
+        results.slice(0, 8).forEach(anime => {
+          const item = document.createElement('div');
+          item.className = 'search-dropdown-item';
+          item.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <div class="item-info"><div class="item-title">${anime.title}</div><div class="item-type">${anime.type}</div></div>
+            <div class="item-play"><i class="fas fa-play-circle"></i></div>
+          `;
+          item.onclick = () => watchAnime(anime.title);
+          dropdown.appendChild(item);
+        });
       }
-    });
+      dropdown.classList.add('active');
+    }
 
-    function goHome() {
+    function handleSearchKeydown(event) {
+      if (event.key === 'Enter') {
+        const query = event.target.value.trim();
+        if (query.length === 0) return;
+        closeDropdown();
+        performSearch(query);
+      }
+    }
+
+    function closeDropdown() {
+      document.getElementById('searchDropdown').classList.remove('active');
+    }
+
+    function performSearch(query) {
+      const results = animeDatabase.filter(anime => anime.title.toLowerCase().includes(query.toLowerCase()));
       const mainContent = document.getElementById('mainContent');
       const searchPage = document.getElementById('searchResultsPage');
-      mainContent.style.display = 'block';
-      searchPage.classList.remove('active');
+      const resultsGrid = document.getElementById('searchResultsGrid');
+      const queryDisplay = document.getElementById('searchQueryDisplay');
+      
+      mainContent.style.display = 'none';
+      searchPage.classList.add('active');
+      queryDisplay.textContent = query;
+      resultsGrid.innerHTML = '';
+      
+      if (results.length === 0) {
+        resultsGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:#888;"><i class="fas fa-search" style="font-size:3rem;margin-bottom:20px;display:block;"></i><h3 style="color:#fff;margin-bottom:10px;">No results found</h3><p>Try searching for something else or check your spelling.</p></div>`;
+      } else {
+        results.forEach(anime => {
+          const item = document.createElement('div');
+          item.className = 'search-result-item';
+          item.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <div class="result-info"><h4>${anime.title}</h4><div class="result-type">${anime.type}</div></div>
+          `;
+          item.onclick = () => watchAnime(anime.title);
+          resultsGrid.appendChild(item);
+        });
+      }
+      document.getElementById('searchResultsCount').textContent = `Found ${results.length} result${results.length !== 1 ? 's' : ''} for: `;
+    }
+
+    // ----- NAVIGATION FUNCTIONS -----
+    function goHome() {
+      document.getElementById('mainContent').style.display = 'block';
+      document.getElementById('searchResultsPage').classList.remove('active');
       document.getElementById('searchInput').value = '';
+      closeDropdown();
       window.scrollTo(0, 0);
     }
 
+    function watchAnime(title) {
+      window.location.href = `watch.html?anime=${encodeURIComponent(title)}`;
+    }
+
+    function shareSite() {
+      if (navigator.share) {
+        navigator.share({ title: 'Zero Anime', text: 'Check out this awesome anime streaming site!', url: window.location.href });
+      } else {
+        window.open(`https://twitter.com/intent/tweet?text=Check%20out%20this%20awesome%20anime%20streaming%20site%20-%20Zero%20Anime!&url=${encodeURIComponent(window.location.href)}`, '_blank');
+      }
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ----- SIDEBAR FUNCTIONS -----
     function openSidebar() {
       document.getElementById('sidebar').style.width = '250px';
     }
@@ -2688,124 +2668,44 @@
     document.addEventListener('click', (event) => {
       const sidebar = document.getElementById('sidebar');
       const settingsButton = document.querySelector('.settings-button');
-      if (!sidebar.contains(event.target) && !settingsButton.contains(event.target)) {
-        closeSidebar();
-      }
+      if (!sidebar.contains(event.target) && !settingsButton.contains(event.target)) closeSidebar();
     });
 
+    // ----- HEADER SCROLL EFFECT -----
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
-      
-      const scrollBtn = document.getElementById('scrollTopBtn');
-      if (window.scrollY > 300) {
-        scrollBtn.classList.add('visible');
-      } else {
-        scrollBtn.classList.remove('visible');
-      }
+      if (window.scrollY > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+      document.getElementById('scrollTopBtn').classList.toggle('visible', window.scrollY > 300);
     });
-   
+
+    // ----- SLIDER FUNCTIONS -----
     let currentSlide = 0;
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.slider-dot');
    
     function showSlide(n) {
-      slides.forEach(slide => slide.classList.remove('active'));
-      dots.forEach(dot => dot.classList.remove('active'));
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
       currentSlide = (n + slides.length) % slides.length;
       slides[currentSlide].classList.add('active');
       dots[currentSlide].classList.add('active');
     }
    
-    function nextSlide() {
-      showSlide(currentSlide + 1);
-    }
-   
-    function prevSlide() {
-      showSlide(currentSlide - 1);
-    }
-   
-    function goToSlide(n) {
-      showSlide(n);
-    }
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+    function goToSlide(n) { showSlide(n); }
    
     setInterval(nextSlide, 6000);
-   
-    function watchAnime(title) {
-      window.location.href = `watch.html?anime=${encodeURIComponent(title)}`;
-    }
 
-    function handleSearch(event) {
-      if (event.key === 'Enter') {
-        const query = event.target.value.trim().toLowerCase();
-        if (query.length === 0) return;
-        performSearch(query);
+    // ----- KEYBOARD SHORTCUTS -----
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeDropdown();
+        if (document.getElementById('loginOverlay').classList.contains('active')) closeLogin();
+        if (document.getElementById('searchResultsPage').classList.contains('active')) goHome();
       }
-    }
-
-    function performSearch(query) {
-      const results = animeDatabase.filter(anime => 
-        anime.title.toLowerCase().includes(query)
-      );
-      
-      const mainContent = document.getElementById('mainContent');
-      const searchPage = document.getElementById('searchResultsPage');
-      const resultsGrid = document.getElementById('searchResultsGrid');
-      const queryDisplay = document.getElementById('searchQueryDisplay');
-      
-      mainContent.style.display = 'none';
-      searchPage.classList.add('active');
-      
-      queryDisplay.textContent = query;
-      resultsGrid.innerHTML = '';
-      
-      if (results.length === 0) {
-        resultsGrid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #888;">
-            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px; display: block;"></i>
-            <h3 style="color: #fff; margin-bottom: 10px;">No results found</h3>
-            <p>Try searching for something else or check your spelling.</p>
-          </div>
-        `;
-      } else {
-        results.forEach(anime => {
-          const item = document.createElement('div');
-          item.className = 'search-result-item';
-          item.innerHTML = `
-            <img src="${anime.image}" alt="${anime.title}">
-            <div class="result-info">
-              <h4>${anime.title}</h4>
-              <div class="result-type">${anime.type}</div>
-            </div>
-          `;
-          item.onclick = () => watchAnime(anime.title);
-          resultsGrid.appendChild(item);
-        });
-      }
-      
-      document.getElementById('searchResultsCount').textContent = `Found ${results.length} result${results.length !== 1 ? 's' : ''} for: `;
-    }
-
-    function shareSite() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Zero Anime',
-          text: 'Check out this awesome anime streaming site!',
-          url: window.location.href
-        }).catch(err => console.log('Error sharing:', err));
-      } else {
-        const shareUrl = `https://twitter.com/intent/tweet?text=Check%20out%20this%20awesome%20anime%20streaming%20site%20-%20Zero%20Anime!&url=${encodeURIComponent(window.location.href)}`;
-        window.open(shareUrl, '_blank');
-      }
-    }
-
-    function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    });
 
     // Load comments on page load
     document.addEventListener('DOMContentLoaded', loadComments);
